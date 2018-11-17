@@ -1,9 +1,11 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/vuehome">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <nav>
+      <div class="nav-wrapper">
+        <router-link class="brand-logo center" to="/">Alelotório</router-link>
+      </div>
+    </nav>
+
     <router-view/>
   </div>
 </template>
