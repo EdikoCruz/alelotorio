@@ -1,7 +1,7 @@
 <template>
   <div class="home container">
     <div class="row create-population">
-      <form action="#" class="center-align col s8">
+      <form class="center-align col s8" @submit.prevent>
         <div class="input-field">
           <input
             id="population-name"
@@ -74,18 +74,33 @@ import { Component, Vue } from 'vue-property-decorator';
 @Component({
   data() {
     return {
-      populationName: 'População',
-      populationSize: '300',
+      populationName: '',
+      populationSize: '1',
       populationSizeMin: 1,
       populationSizeMax: 1000,
-      populations: [],
+      populations: [
+        {
+          populationName: 'População pequena',
+          populationSize: 30,
+          a1a1: 10,
+          a1a2: 10,
+          a2a2: 10,
+        },
+        {
+          populationName: 'População grande',
+          populationSize: 300,
+          a1a1: 100,
+          a1a2: 100,
+          a2a2: 100,
+        },
+      ],
     };
   },
 
   methods: {
     clearPopulation(): void {
-      (this as any).populationName = 'População';
-      (this as any).populationSize = '300';
+      (this as any).populationName = '';
+      (this as any).populationSize = '1';
     },
     addPopulation(): void {
       if ((this as any).populationIsValid) {
