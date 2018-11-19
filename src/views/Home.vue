@@ -104,10 +104,11 @@ import { Component, Vue } from 'vue-property-decorator';
   methods: {
     addPopulation(): void {
       const p: any = (this as any).population;
+      // eval to access global =/
       if (p.name === '') {
-        (M as any).toast({html: 'O nome não pode estar em branco'});
+        (eval("M") as any).toast({html: 'O nome não pode estar em branco'});
       } else if (Number(p.size) < 1 || Number(p.size) > 10000) {
-        (M as any).toast({html: 'O tamanho não pode ser menor que 1 ou maior que 10000'});
+        (eval("M") as any).toast({html: 'O tamanho não pode ser menor que 1 ou maior que 10000'});
       } else {
         (this as any).populations.push({
           name: p.name,
