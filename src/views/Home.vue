@@ -9,7 +9,7 @@
           <label for="population-name">Nome</label>
         </div>
         <div class="input-field col s5">
-          <input id="population-size" type="number" v-model="population.size">
+          <input id="population-size" type="number" v-model="population.size" min="1" max="10000">
           <label for="population-size">Tamanho</label>
         </div>
         <div class="input-field col s2">
@@ -24,17 +24,23 @@
         <tr>
             <th>Nome</th>
             <th>Tamanho</th>
+            <th>Remover</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(p, i) in populations" v-bind:key="i">
           <td>{{p.name}}</td>
           <td>{{p.size}}</td>
+          <td>
+            <button class="waves-effect waves-light btn" @click="removePopulation(i)">
+              <i class="material-icons center">delete</i>
+            </button>
+          </td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
-          <td class="center-align" colspan="2">
+          <td class="center-align" colspan="3">
             <button class="waves-effect waves-light btn" @click="generateHistogram">Gerar histogram</button>
           </td>
         </tr>
@@ -98,13 +104,23 @@ import { Component, Vue } from 'vue-property-decorator';
   methods: {
     addPopulation(): void {
       const p: any = (this as any).population;
-      (this as any).populations.push({
-        name: p.name,
-        size: Number(p.size),
-        a1: Number(p.size),
-        a2: Number(p.size),
-        histogram: [],
-      });
+      if (p.name === '') {
+        (M as any).toast({html: 'O nome não pode estar em branco'});
+      } else if (Number(p.size) < 1 || Number(p.size) > 10000) {
+        (M as any).toast({html: 'O tamanho não pode ser menor que 1 ou maior que 10000'});
+      } else {
+        (this as any).populations.push({
+          name: p.name,
+          size: Number(p.size),
+          a1: Number(p.size),
+          a2: Number(p.size),
+          histogram: [],
+        });
+        (this as any).population = {name: '', size: ''};
+      }
+    },
+    removePopulation(index): void {
+      (this as any).populations.splice(index, 1);
     },
     generateHistogram(): void {
       (this as any).populations.forEach((p: any) => {
