@@ -28,7 +28,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(p, i) in populations" v-bind:key="i">
+        <tr v-for="(p, i) in populations" :key="i">
           <td>{{p.name}}</td>
           <td>{{p.size}}</td>
           <td>
@@ -47,12 +47,7 @@
       </tfoot>
     </table>
 
-    <div v-for="(p, i) in populations" v-bind:key="i">
-      <br/>
-      {{p.name}}:{{p.histogram.length}}
-      <br/>
-      {{p.histogram[p.histogram.length-1]}}
-    </div>
+    <line-chart :data="histogramData" xtitle="Geração" ytitle="Porcentagem do alelo" height="500px"/>
 
   </div>
 </template>
@@ -71,30 +66,23 @@ import { Component, Vue } from 'vue-property-decorator';
       populations: [
         {
           name: 'População Pequena',
-          size: 20,
-          a1: 20,
-          a2: 20,
+          size: 50,
+          a1: 50,
+          a2: 50,
           histogram: [],
         },
         {
           name: 'População Média',
-          size: 200,
-          a1: 200,
-          a2: 200,
+          size: 100,
+          a1: 100,
+          a2: 100,
           histogram: [],
         },
         {
           name: 'População Grande',
-          size: 400,
-          a1: 400,
-          a2: 400,
-          histogram: [],
-        },
-        {
-          name: 'População Enorme',
-          size: 800,
-          a1: 800,
-          a2: 800,
+          size: 200,
+          a1: 200,
+          a2: 200,
           histogram: [],
         },
       ],
@@ -106,9 +94,11 @@ import { Component, Vue } from 'vue-property-decorator';
       const p: any = (this as any).population;
       // eval to access global =/
       if (p.name === '') {
-        (eval("M") as any).toast({html: 'O nome não pode estar em branco'});
+        // @ts-ignore
+        (M as any).toast({html: 'O nome não pode estar em branco'});
       } else if (Number(p.size) < 1 || Number(p.size) > 10000) {
-        (eval("M") as any).toast({html: 'O tamanho não pode ser menor que 1 ou maior que 10000'});
+        // @ts-ignore
+        (M as any).toast({html: 'O tamanho não pode ser menor que 1 ou maior que 10000'});
       } else {
         (this as any).populations.push({
           name: p.name,
@@ -152,6 +142,26 @@ import { Component, Vue } from 'vue-property-decorator';
   },
 
   computed: {
+    histogramData(): any[] {
+      return (this as any).populations.reduce((p: any, c: any) => {
+        const population = c;
+        p.push({
+          name: c.name + ' A1',
+          data: c.histogram.reduce((p: any, c: any, i: number) => {
+            p[i] = (c.a1 / (population.size * 2)) * 100;
+            return p;
+          }, {}),
+        });
+        p.push({
+          name: c.name + ' A2',
+          data: c.histogram.reduce((p: any, c: any, i: number) => {
+            p[i] = (c.a2 / (population.size * 2)) * 100;
+            return p;
+          }, {}),
+        });
+        return p;
+      }, []);
+    },
   },
 })
 export default class Home extends Vue {}

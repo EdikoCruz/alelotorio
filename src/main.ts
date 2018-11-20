@@ -2,6 +2,13 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
+// @ts-ignore
+import VueChartkick from 'vue-chartkick';
+// @ts-ignore
+import Chart from 'chart.js';
+
+Vue.use(VueChartkick, {adapter: Chart});
+
 import './registerServiceWorker';
 
 import '../node_modules/materialize-css/dist/css/materialize.min.css';
