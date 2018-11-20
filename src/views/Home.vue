@@ -9,7 +9,7 @@
           <label for="population-name">Nome</label>
         </div>
         <div class="input-field col s5">
-          <input id="population-size" type="number" v-model="population.size" min="1" max="10000">
+          <input id="population-size" type="number" v-model="population.size" :min="config.minSize" :max="config.maxSize" :step="config.step">
           <label for="population-size">Tamanho</label>
         </div>
         <div class="input-field col s2">
@@ -48,120 +48,135 @@
     </table>
 
     <line-chart :data="histogramData" xtitle="Geração" ytitle="Porcentagem do alelo" height="500px"/>
-
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { constants } from 'http2';
 
 @Component({
   data() {
     return {
-      maxNumberOfGenerations: 9999,
-      population: {
-        name: '',
-        size: '',
+      config: {
+        maxNumberOfGenerations: 9999,
+        minSize: 4,
+        maxSize: 1000,
+        step: 4,
       },
-      populations: [
-        {
-          name: 'População Pequena',
-          size: 50,
-          a1: 50,
-          a2: 50,
-          histogram: [],
-        },
-        {
-          name: 'População Média',
-          size: 100,
-          a1: 100,
-          a2: 100,
-          histogram: [],
-        },
-        {
-          name: 'População Grande',
-          size: 200,
-          a1: 200,
-          a2: 200,
-          histogram: [],
-        },
-      ],
+      population: {},
+      populations: [],
     };
   },
 
   methods: {
+    clearPopulation(): void {
+      // to avoid tslinter check, it do not validate data attributes
+      const that: any = this;
+      that.population = {name: '', size: '', histogramData: {a1: {}, a2: {}}};
+    },
     addPopulation(): void {
-      const p: any = (this as any).population;
-      // eval to access global =/
-      if (p.name === '') {
-        // @ts-ignore
-        (M as any).toast({html: 'O nome não pode estar em branco'});
-      } else if (Number(p.size) < 1 || Number(p.size) > 10000) {
-        // @ts-ignore
-        (M as any).toast({html: 'O tamanho não pode ser menor que 1 ou maior que 10000'});
+      // M is global
+      // @ts-ignore
+      const toast = M.toast;
+      // to avoid tslinter check, it do not validate data attributes
+      const that: any = this;
+      // data bind
+      const population: any = that.population;
+      const populations: any = that.populations;
+      const minSize = that.config.minSize;
+      const maxSize = that.config.maxSize;
+      const step = that.config.step;
+      // population validation
+      const size = Number(population.size);
+      const name = population.name;
+
+      if (! name) {
+        toast({html: 'O nome não pode estar em branco'});
+      } else if (size % step !== 0) {
+        toast({html: `O tamanho precisa ser múltiplo de ${step}`});
+      } else if (size < minSize) {
+        toast({html: `O tamanho não pode ser menor ${minSize}`});
+      } else if (size > maxSize) {
+        toast({html: `O tamanho não pode ser maior ${maxSize}`});
       } else {
-        (this as any).populations.push({
-          name: p.name,
-          size: Number(p.size),
-          a1: Number(p.size),
-          a2: Number(p.size),
-          histogram: [],
-        });
-        (this as any).population = {name: '', size: ''};
+        populations.push(population);
+        that.clearPopulation();
       }
     },
     removePopulation(index): void {
-      (this as any).populations.splice(index, 1);
+      // to avoid tslinter check, it do not validate data attributes
+      const that: any = this;
+      that.populations.splice(index, 1);
     },
     generateHistogram(): void {
-      (this as any).populations.forEach((p: any) => {
-        const h = [{a1: p.a1, a2: p.a2}];
-        const total = p.size * 2;
+      // to avoid tslinter check, it do not validate data attributes
+      const that: any = this;
+      // data bind
+      const populations: any = that.populations;
+      const maxNumberOfGenerations: number = that.config.maxNumberOfGenerations;
 
-        let g = 0;
-        while (g < (this as any).maxNumberOfGenerations && h[g].a1 !== total && h[g].a2 !== total) {
-          let a1 = 0;
-          let a2 = 0;
-          const a1Percentage = h[g].a1 / total;
+      populations.forEach((population: any) => {
+        let a1 = population.size;
+        let a2 = population.size;
+        const total = population.size * 2;
+        const histogramDataA1: any = {name: `${population.name} A1`, data: {0: 50}};
+        const histogramDataA2: any = {name: `${population.name} A2`, data: {0: 50}};
+
+        let generation = 1;
+        while (generation < maxNumberOfGenerations && a1 !== total && a2 !== total) {
+          let a1Counter = 0;
+          let a2Counter = 0;
+          const a1Percentage = a1 / total;
 
           for (let index = 0; index < total; index++) {
             if (Math.random() < a1Percentage) {
-              a1 += 1;
+              a1Counter += 1;
             } else {
-              a2 += 1;
+              a2Counter += 1;
             }
           }
-
-          h.push({a1, a2});
-          g += 1;
+          a1 = a1Counter;
+          a2 = a2Counter;
+          histogramDataA1.data[generation] = (a1 / total) * 100;
+          histogramDataA2.data[generation] = (a2 / total) * 100;
+          generation += 1;
         }
 
-        p.histogram = h;
+        population.histogramData = {a1: histogramDataA1, a2: histogramDataA2};
       });
     },
   },
 
   computed: {
     histogramData(): any[] {
-      return (this as any).populations.reduce((p: any, c: any) => {
-        const population = c;
-        p.push({
-          name: c.name + ' A1',
-          data: c.histogram.reduce((p: any, c: any, i: number) => {
-            p[i] = (c.a1 / (population.size * 2)) * 100;
-            return p;
-          }, {}),
-        });
-        p.push({
-          name: c.name + ' A2',
-          data: c.histogram.reduce((p: any, c: any, i: number) => {
-            p[i] = (c.a2 / (population.size * 2)) * 100;
-            return p;
-          }, {}),
-        });
-        return p;
+      // to avoid tslinter check, it do not validate data attributes
+      const that: any = this;
+      // data bind
+      const populations: any = that.populations;
+
+      return populations.reduce((product: any, population: any) => {
+        product.push(population.histogramData.a1);
+        product.push(population.histogramData.a2);
+
+        return product;
       }, []);
     },
+  },
+
+  mounted() {
+    // to avoid tslinter check, it do not validate data attributes
+    const that: any = this;
+
+    that.clearPopulation();
+
+    that.population.name = 'População pequena';
+    that.population.size = 40;
+    that.addPopulation();
+
+    that.population.name = 'População Grande';
+    that.population.size = 400;
+    that.addPopulation();
   },
 })
 export default class Home extends Vue {}
