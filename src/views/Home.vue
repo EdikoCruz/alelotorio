@@ -47,6 +47,23 @@
       </tfoot>
     </table>
 
+     <!-- HISTOGRAM -->
+    <table class="striped vertical-margin">
+      <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Alelo fixado</th>
+            <th>Geração em que o alelo foi fixado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(p, i) in populations" :key="i">
+          <td>{{p.name}}</td>
+          <td>{{p.allele}}</td>
+          <td>{{p.generation}}</td>
+        </tr>
+      </tbody>
+    </table>
     <line-chart :data="histogramData" xtitle="Geração" ytitle="Porcentagem do alelo" height="500px"/>
   </div>
 </template>
@@ -73,7 +90,13 @@ import { constants } from 'http2';
     clearPopulation(): void {
       // to avoid tslinter check, it do not validate data attributes
       const that: any = this;
-      that.population = {name: '', size: '', histogramData: {a1: {}, a2: {}}};
+      that.population = {
+        name: '',
+        size: '',
+        allele: '',
+        generation: '',
+        histogramData: {a1: {}, a2: {}},
+      };
     },
     addPopulation(): void {
       // M is global
@@ -143,6 +166,8 @@ import { constants } from 'http2';
           generation += 1;
         }
 
+        population.generation = Math.min(generation, maxNumberOfGenerations);
+        population.allele = a1 == total ? 'A1' : 'A2';
         population.histogramData = {a1: histogramDataA1, a2: histogramDataA2};
       });
     },
@@ -170,12 +195,16 @@ import { constants } from 'http2';
 
     that.clearPopulation();
 
-    that.population.name = 'População pequena';
+    that.population.name = 'População Pequena';
     that.population.size = 40;
     that.addPopulation();
 
     that.population.name = 'População Grande';
     that.population.size = 400;
+    that.addPopulation();
+
+    that.population.name = 'População Enorme';
+    that.population.size = 1000;
     that.addPopulation();
   },
 })
