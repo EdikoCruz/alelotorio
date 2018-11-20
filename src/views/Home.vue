@@ -4,15 +4,15 @@
     <!-- POPULATION FORM -->
     <form class="col s12" @submit.prevent>
       <div class="row">
-        <div class="input-field col s5">
+        <div class="input-field col s12 l5">
           <input id="population-name" type="text" v-model="population.name">
           <label for="population-name">Nome</label>
         </div>
-        <div class="input-field col s5">
+        <div class="input-field col s12 l5">
           <input id="population-size" type="number" v-model="population.size" :min="config.minSize" :max="config.maxSize" :step="config.step">
           <label for="population-size">Tamanho</label>
         </div>
-        <div class="input-field col s2">
+        <div class="input-field col s12 l2 center-align">
           <button class="waves-effect waves-light btn" @click="addPopulation">Adicionar</button>
         </div>
       </div>
