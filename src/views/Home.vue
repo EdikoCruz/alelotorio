@@ -47,31 +47,16 @@
       </tfoot>
     </table>
 
-     <!-- HISTOGRAM -->
-    <line-chart
-      :data="histogramData"
-      :colors="histogramColors"
-      :messages="{empty: 'Sem dados'}"
-      legend="bottom"
-      xtitle="Geração"
-      ytitle="Porcentagem do alelo"
-      height="500px" />
-    <table class="striped centered vertical-margin">
-      <thead>
-        <tr>
-            <th>Nome</th>
-            <th>Alelo fixado</th>
-            <th>Geração em que o alelo foi fixado</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(p, i) in populations" :key="i">
-          <td>{{p.name}}</td>
-          <td>{{p.allele || 'Sem dados'}}</td>
-          <td>{{p.generation || 'Sem dados'}}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="row vertical-margin">
+      <alleles-histogram
+        class="col s12 l6"
+        :populations="populations"
+        :a1-color="config.colors.a1"
+        :a2-color="config.colors.a2" />
+      <alleles-table
+        class="col s12 l6"
+        :populations="populations" />
+    </div>
 
     <!-- POPULATION DIPLOID -->
     <div class="row">
@@ -109,10 +94,15 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { constants } from 'http2';
-import { finished } from 'stream';
+import AllelesHistogram from '@/components/AllelesHistogram.vue';
+import AllelesTable from '@/components/AllelesTable.vue';
 
 @Component({
+  components: {
+    AllelesHistogram,
+    AllelesTable,
+  },
+
   data() {
     return {
       t: 0,
@@ -122,9 +112,9 @@ import { finished } from 'stream';
         maxSize: 1000,
         step: 4,
         colors: {
-          a1: '#F012BE',
-          a2: '#0074D9',
-          both: '#B10DC9',
+          a1: '#f48fb1',
+          a2: '#9fa8da',
+          both: '#ce93d8',
         },
       },
       population: {},
@@ -240,31 +230,6 @@ import { finished } from 'stream';
   },
 
   computed: {
-    histogramColors(): string[] {
-      // to avoid tslinter check, it do not validate data attributes
-      const that: any = this;
-      // data bind
-      const populations: any = that.populations;
-
-      return populations.reduce((product: any, population: any) => {
-        product.push('#F012BE');
-        product.push('#0074D9');
-        return product;
-      }, []);
-    },
-    histogramData(): any[] {
-      // to avoid tslinter check, it do not validate data attributes
-      const that: any = this;
-      // data bind
-      const populations: any = that.populations;
-
-      return populations.reduce((product: any, population: any) => {
-        product.push(population.histogramData.a1);
-        product.push(population.histogramData.a2);
-
-        return product;
-      }, []);
-    },
     diploidData(): any {
       // to avoid tslinter check, it do not validate data attributes
       const that: any = this;
