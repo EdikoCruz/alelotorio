@@ -41,7 +41,7 @@
       <tfoot>
         <tr>
           <td class="center-align" colspan="3">
-            <button class="waves-effect waves-light btn" @click="generateHistogram">Gerar histogram</button>
+            <button class="waves-effect waves-light btn" @click="generateHistogram">Gerar Gráficos</button>
           </td>
         </tr>
       </tfoot>
@@ -64,7 +64,14 @@
         </tr>
       </tbody>
     </table>
-    <line-chart :data="histogramData" xtitle="Geração" ytitle="Porcentagem do alelo" height="500px"/>
+    <line-chart
+      :data="histogramData"
+      :colors="histogramColors"
+      :messages="{empty: 'Sem dados'}"
+      legend="bottom"
+      xtitle="Geração"
+      ytitle="Porcentagem do alelo"
+      height="500px" />
   </div>
 </template>
 
@@ -93,8 +100,10 @@ import { constants } from 'http2';
       that.population = {
         name: '',
         size: '',
+        // if fixed
         allele: '',
         generation: '',
+        // data
         histogramData: {a1: {}, a2: {}},
       };
     },
@@ -167,13 +176,23 @@ import { constants } from 'http2';
         }
 
         population.generation = Math.min(generation, maxNumberOfGenerations);
-        population.allele = a1 == total ? 'A1' : 'A2';
+        population.allele = a1 === total ? 'A1' : 'A2';
         population.histogramData = {a1: histogramDataA1, a2: histogramDataA2};
       });
     },
   },
 
   computed: {
+    histogramColors(): string[] {
+      const that: any = this;
+      const populations: any = that.populations;
+
+      return populations.reduce((product: any, population: any) => {
+        product.push('#F012BE');
+        product.push('#0074D9');
+        return product;
+      }, []);
+    },
     histogramData(): any[] {
       // to avoid tslinter check, it do not validate data attributes
       const that: any = this;
