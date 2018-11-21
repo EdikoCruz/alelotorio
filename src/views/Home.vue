@@ -215,7 +215,7 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
         const histogramDataA2: any = {name: `${population.name} A2`, data: {1: 50}};
 
         let generation = 2;
-        while (generation < maxNumberOfGenerations && a1 !== total && a2 !== total) {
+        while (generation <= maxNumberOfGenerations && a1 !== total && a2 !== total) {
           let a1Counter = 0;
           let a2Counter = 0;
           const diploid = {a1a1: 0, a2a2: 0, both: 0};
