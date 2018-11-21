@@ -21,12 +21,12 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
       const population: any = that.population;
       const a1Color: string = that.a1Color || '#cfd8dc';
       const a2Color: string = that.a2Color || '#607d8b';
-      const full: string = that.full;
+      const partial: string = that.partial;
       const attribute: string = that.attribute || 'histogramData';
 
       if (populations) {
         return populations.reduce((product: any[], p: any) => {
-          if (!full) {
+          if (partial) {
             if (p.allele === 'A1') {
               product.push({...p[attribute].a1, color: a1Color});
             } else {
@@ -39,7 +39,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
           return product;
         }, []);
       }
-      if (!full) {
+      if (partial) {
         if (population.allele === 'A1') {
           return [{...population[attribute].a1, color: a1Color}];
         } else {
@@ -59,7 +59,7 @@ export default class AllelesHistogram extends Vue {
   @Prop() private a1Color!: string;
   @Prop() private a2Color!: string;
   @Prop() private attribute!: string;
-  @Prop() private full!: boolean;
+  @Prop() private partial!: boolean;
 }
 </script>
 

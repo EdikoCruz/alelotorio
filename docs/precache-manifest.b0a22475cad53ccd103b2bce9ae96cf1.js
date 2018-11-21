@@ -8,15 +8,15 @@ self.__precacheManifest = [
     "url": "/alelotorio/js/chunk-vendors.44589269.js"
   },
   {
-    "revision": "e9f6ea0c79a4685dc375",
-    "url": "/alelotorio/js/app.02222b1e.js"
+    "revision": "1c7f5c1a07044bfda735",
+    "url": "/alelotorio/js/app.89c70f9b.js"
   },
   {
     "revision": "df7d05f20fb567a2bc88",
     "url": "/alelotorio/js/about.41d5fe9c.js"
   },
   {
-    "revision": "5e2559fa282924845fc060f49de7f2b0",
+    "revision": "8456f216523826e0dcd7a343ad7f6fb8",
     "url": "/alelotorio/index.html"
   },
   {
@@ -28,7 +28,7 @@ self.__precacheManifest = [
     "url": "/alelotorio/css/chunk-vendors.951eb372.css"
   },
   {
-    "revision": "e9f6ea0c79a4685dc375",
+    "revision": "1c7f5c1a07044bfda735",
     "url": "/alelotorio/css/app.a325969f.css"
   },
   {
