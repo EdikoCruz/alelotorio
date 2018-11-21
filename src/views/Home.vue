@@ -50,34 +50,30 @@
     </table>
 
     <div class="divider"></div>
+    <div class="row vertical-margin">
+      <ul class="col s12 tabs">
+        <li class="tab col s6">
+          <a :class="[ tabs.lean ? '' : 'active']" @click="tabs.lean = false">Completo</a>
+        </li>
+        <li class="tab col s6">
+          <a :class="[ tabs.lean ? 'active' : '']" @click="tabs.lean = true">Enxuto</a>
+        </li>
+      </ul>
 
-    <!-- ALLELES -->
-    <div class="row vertical-margin">
-      <div class="col s12 center-align">
-        <p>Completo</p>
+      <div class="col s12">
+        <div class="col s12 center-align">
+          <p>{{tabs.lean ? 'Enxuto' : 'Completo'}}</p>
+        </div>
+        <alleles-histogram
+          class="col s12 l6"
+          :populations="populations"
+          :attribute="tabs.lean ? 'histogramDataCleaned' : 'histogramData'"
+          :a1-color="config.colors.a1"
+          :a2-color="config.colors.a2" />
+        <alleles-table
+          class="col s12 l6"
+          :populations="populations" />
       </div>
-      <alleles-histogram
-        class="col s12 l6"
-        :populations="populations"
-        :a1-color="config.colors.a1"
-        :a2-color="config.colors.a2" />
-      <alleles-table
-        class="col s12 l6"
-        :populations="populations" />
-    </div>
-    <div class="row vertical-margin">
-      <div class="col s12 center-align">
-        <p>Enxuto</p>
-      </div>
-      <alleles-histogram
-        class="col s12 l6"
-        :populations="populations"
-        attribute="histogramDataCleaned"
-        :a1-color="config.colors.a1"
-        :a2-color="config.colors.a2" />
-      <alleles-table
-        class="col s12 l6"
-        :populations="populations" />
     </div>
 
     <div class="divider"></div>
@@ -131,7 +127,9 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
 
   data() {
     return {
-      t: 0,
+      tabs: {
+        lean: false,
+      },
       config: {
         maxNumberOfGenerations: 5000,
         histogramMultiplicity: 10,
