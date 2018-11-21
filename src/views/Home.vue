@@ -18,6 +18,8 @@
       </div>
     </form>
 
+    <div class="divider"></div>
+
     <!-- POPULATIONS -->
     <table class="striped centered vertical-margin">
       <thead>
@@ -47,8 +49,13 @@
       </tfoot>
     </table>
 
+    <div class="divider"></div>
+
     <!-- ALLELES -->
     <div class="row vertical-margin">
+      <div class="col s12 center-align">
+        <p>Completo</p>
+      </div>
       <alleles-histogram
         class="col s12 l6"
         :populations="populations"
@@ -58,18 +65,54 @@
         class="col s12 l6"
         :populations="populations" />
     </div>
+    <div class="row vertical-margin">
+      <div class="col s12 center-align">
+        <p>Enxuto</p>
+      </div>
+      <alleles-histogram
+        class="col s12 l6"
+        :populations="populations"
+        attribute="histogramDataCleaned"
+        :a1-color="config.colors.a1"
+        :a2-color="config.colors.a2" />
+      <alleles-table
+        class="col s12 l6"
+        :populations="populations" />
+    </div>
+
+    <div class="divider"></div>
 
     <!-- DIPLOIDS -->
     <div class="row vertical-margin">
       <diploid-by-generation
         class="col s12 l4"
-        v-for="(p, i) in populations"
+        v-for="(population, i) in populations"
         :key="i"
-        :population="p"
+        :population="population"
         :a1-color="config.colors.a1"
         :both-color="config.colors.both"
         :a2-color="config.colors.a2" />
     </div>
+
+    <div class="divider"></div>
+
+    <div class="row vertical-margin">
+      <div v-for="(population, i) in populations" :key="i">
+        <alleles-histogram
+          class="col s12 l6"
+          :population="population"
+          :a1-color="config.colors.a1"
+          :a2-color="config.colors.a2" />
+        <diploid-by-generation
+          class="col s12 l6"
+          :population="population"
+          :a1-color="config.colors.a1"
+          :both-color="config.colors.both"
+          :a2-color="config.colors.a2" />
+      </div>
+    </div>
+
+
   </div>
 </template>
 
@@ -90,7 +133,8 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
     return {
       t: 0,
       config: {
-        maxNumberOfGenerations: 9999,
+        maxNumberOfGenerations: 5000,
+        histogramMultiplicity: 10,
         minSize: 4,
         maxSize: 1000,
         step: 4,
@@ -117,6 +161,7 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
         generation: '',
         // charts data
         histogramData: {a1: {}, a2: {}},
+        histogramDataCleaned: {a1: {}, a2: {}},
         diploidData: [],
       };
     },
@@ -158,6 +203,7 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
       // data bind
       const populations: any = that.populations;
       const maxNumberOfGenerations: number = that.config.maxNumberOfGenerations;
+      const histogramMultiplicity: number = that.config.histogramMultiplicity;
 
       populations.forEach((population: any) => {
         let a1 = population.size;
@@ -176,7 +222,7 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
 
           for (let index = 0; index < size; index++) {
             const d1 = Math.ceil(Math.random() * total) <= a1 ? 'a1' : 'a2';
-            const d2 = Math.ceil(Math.random() * total) <= a1 ? 'a1' : 'a2';
+            const d2 = Math.ceil(Math.random() * total) <= a2 ? 'a2' : 'a1';
 
             if (d1 === 'a1' && d2 === 'a1') {
               diploid.a1a1 += 1;
@@ -200,7 +246,30 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
         }
 
         population.generation = Math.min(generation, maxNumberOfGenerations);
-        population.allele = a1 === total ? 'A1' : 'A2';
+        if (generation === maxNumberOfGenerations) {
+          population.allele = '-';
+        } else {
+          population.allele = a1 === total ? 'A1' : 'A2';
+        }
+        // const histogramDataA1: any = {name: `${population.name} A1`, data: {0: 50}};
+        const histogramDataA1Cleaned: any = {...histogramDataA1};
+        const histogramDataA2Cleaned: any = {...histogramDataA2};
+        histogramDataA1Cleaned.data = {0: 50};
+        histogramDataA2Cleaned.data = {0: 50};
+
+        let i = histogramMultiplicity;
+        while (i < generation) {
+          histogramDataA1Cleaned.data[i] = histogramDataA1.data[i];
+          histogramDataA2Cleaned.data[i] = histogramDataA2.data[i];
+          i += histogramMultiplicity;
+        }
+        histogramDataA1Cleaned.data[
+          Math.floor(generation / histogramMultiplicity) * histogramMultiplicity
+        ] = histogramDataA1.data[generation - 1];
+        histogramDataA2Cleaned.data[
+          Math.floor(generation / histogramMultiplicity) * histogramMultiplicity
+        ] = histogramDataA2.data[generation - 1];
+        population.histogramDataCleaned = {a1: histogramDataA1Cleaned, a2: histogramDataA2Cleaned};
         population.histogramData = {a1: histogramDataA1, a2: histogramDataA2};
         population.diploidData = diploidData;
       });
@@ -214,16 +283,16 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
 
     that.createPopulationForm(); // to add attributes
 
-    that.population.name = 'População Pequena';
-    that.population.size = 40;
+    that.population.name = 'Aquário';
+    that.population.size = 20;
     that.addPopulation();
 
-    that.population.name = 'População Grande';
-    that.population.size = 400;
+    that.population.name = 'Pet shop';
+    that.population.size = 80;
     that.addPopulation();
 
-    that.population.name = 'População Enorme';
-    that.population.size = 1000;
+    that.population.name = 'Distribuidor';
+    that.population.size = 200;
     that.addPopulation();
   },
 })

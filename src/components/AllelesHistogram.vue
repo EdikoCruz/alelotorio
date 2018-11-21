@@ -17,33 +17,43 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
   computed: {
     colors(): string[] {
       const that: any = this;
-      const a1Color = that.a1Color || '#cfd8dc';
-      const a2Color = that.a2Color || '#607d8b';
+      const a1Color: string = that.a1Color || '#cfd8dc';
+      const a2Color: string = that.a2Color || '#607d8b';
       const populations: any = that.populations;
 
-      return populations.reduce((product: any, population: any) => {
-        product.push(a1Color);
-        product.push(a2Color);
-        return product;
-      }, []);
+      if (populations) {
+        return populations.reduce((product: any, p: any) => {
+          product.push(a1Color);
+          product.push(a2Color);
+          return product;
+        }, []);
+      }
+      return [a1Color, a2Color];
     },
     data(): any[] {
       const that: any = this;
       // data bind
       const populations: any = that.populations;
+      const population: any = that.population;
+      const attribute: string = that.attribute || 'histogramData';
 
-      return populations.reduce((product: any[], population: any) => {
-        product.push(population.histogramData.a1);
-        product.push(population.histogramData.a2);
-        return product;
-      }, []);
+      if (populations) {
+        return populations.reduce((product: any[], p: any) => {
+          product.push(p[attribute].a1);
+          product.push(p[attribute].a2);
+          return product;
+        }, []);
+      }
+      return [population[attribute].a1, population[attribute].a2];
     },
   },
 })
 export default class AllelesHistogram extends Vue {
   @Prop() private populations!: any[];
+  @Prop() private population!: any;
   @Prop() private a1Color!: string;
   @Prop() private a2Color!: string;
+  @Prop() private attribute!: string;
 }
 </script>
 
