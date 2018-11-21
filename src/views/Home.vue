@@ -93,6 +93,13 @@
           </tr>
         </tbody>
       </table>
+      <pie-chart :data="[
+          ['A1a1', diploidData.length > 0 ? (diploidData[0].length >0 ? diploidData[0][t].a1a1 : 0) : 'Sem dados'],
+          ['Both', diploidData.length > 0 ? (diploidData[0].length >0 ? diploidData[0][t].both : 0) : 'Sem dados'],
+          ['A2A2', diploidData.length > 0 ? (diploidData[0].length >0 ? diploidData[0][t].a2a2 : 0) : 'Sem dados']
+        ]"
+        :donut="true"
+        :colors="['#F012BE','#B10DC9','#0074D9']"></pie-chart>
       <p class="range-field">
         <input type="range" min="0" :max="diploidData.length > 0 ? diploidData[0].length-1 : 0" v-model="t"/>
       </p>
