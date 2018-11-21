@@ -41,12 +41,13 @@
       <tfoot>
         <tr>
           <td class="center-align" colspan="3">
-            <button class="waves-effect waves-light btn" @click="generateHistogram">Gerar Gráficos</button>
+            <button class="waves-effect waves-light btn" @click="generateOffspring">Gerar Gráficos</button>
           </td>
         </tr>
       </tfoot>
     </table>
 
+    <!-- ALLELES -->
     <div class="row vertical-margin">
       <alleles-histogram
         class="col s12 l6"
@@ -58,36 +59,16 @@
         :populations="populations" />
     </div>
 
-    <!-- POPULATION DIPLOID -->
-    <div class="row">
-      <table class="striped centered vertical-margin">
-        <thead>
-          <tr>
-              <th></th>
-              <th>A1A1</th>
-              <th>A2A2</th>
-              <th>Both</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Geração</td>
-            <td>{{diploidData.length > 0 ? (diploidData[0].length >0 ? diploidData[0][t].a1a1 : 0) : 'Sem dados'}}</td>
-            <td>{{diploidData.length > 0 ? (diploidData[0].length >0 ? diploidData[0][t].a2a2 : 0) : 'Sem dados'}}</td>
-            <td>{{diploidData.length > 0 ? (diploidData[0].length >0 ? diploidData[0][t].both : 0) : 'Sem dados'}}</td>
-          </tr>
-        </tbody>
-      </table>
-      <pie-chart :data="[
-          ['A1a1', diploidData.length > 0 ? (diploidData[0].length >0 ? diploidData[0][t].a1a1 : 0) : 'Sem dados'],
-          ['Both', diploidData.length > 0 ? (diploidData[0].length >0 ? diploidData[0][t].both : 0) : 'Sem dados'],
-          ['A2A2', diploidData.length > 0 ? (diploidData[0].length >0 ? diploidData[0][t].a2a2 : 0) : 'Sem dados']
-        ]"
-        :donut="true"
-        :colors="['#F012BE','#B10DC9','#0074D9']"></pie-chart>
-      <p class="range-field">
-        <input type="range" min="0" :max="diploidData.length > 0 ? diploidData[0].length-1 : 0" v-model="t"/>
-      </p>
+    <!-- DIPLOIDS -->
+    <div class="row vertical-margin">
+      <diploid-by-generation
+        class="col s12 l4"
+        v-for="(p, i) in populations"
+        :key="i"
+        :population="p"
+        :a1-color="config.colors.a1"
+        :both-color="config.colors.both"
+        :a2-color="config.colors.a2" />
     </div>
   </div>
 </template>
@@ -96,11 +77,13 @@
 import { Component, Vue } from 'vue-property-decorator';
 import AllelesHistogram from '@/components/AllelesHistogram.vue';
 import AllelesTable from '@/components/AllelesTable.vue';
+import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
 
 @Component({
   components: {
     AllelesHistogram,
     AllelesTable,
+    DiploidByGeneration,
   },
 
   data() {
@@ -123,7 +106,7 @@ import AllelesTable from '@/components/AllelesTable.vue';
   },
 
   methods: {
-    createPopulation(): void {
+    createPopulationForm(): void {
       const that: any = this; // tslinter's data attributes bug
       that.population = {
         // population attributes
@@ -141,6 +124,7 @@ import AllelesTable from '@/components/AllelesTable.vue';
       // M is global
       // @ts-ignore
       const toast = M.toast;
+
       const that: any = this;
       // data bind
       const population: any = that.population;
@@ -162,14 +146,14 @@ import AllelesTable from '@/components/AllelesTable.vue';
         toast({html: `O tamanho não pode ser maior ${maxSize}`});
       } else {
         populations.push(population);
-        that.createPopulation();
+        that.createPopulationForm();
       }
     },
     removePopulation(index): void {
       const that: any = this;
       that.populations.splice(index, 1);
     },
-    generateHistogram(): void {
+    generateOffspring(): void {
       const that: any = this;
       // data bind
       const populations: any = that.populations;
@@ -179,76 +163,56 @@ import AllelesTable from '@/components/AllelesTable.vue';
         let a1 = population.size;
         let a2 = population.size;
         const total = population.size * 2;
-        const diploidData = population.diploidData;
+        const size = population.size;
+        const diploidData = [{a1a1: total / 4, a2a2: total / 4, both: total / 2}];
         const histogramDataA1: any = {name: `${population.name} A1`, data: {0: 50}};
         const histogramDataA2: any = {name: `${population.name} A2`, data: {0: 50}};
 
         let generation = 1;
-        let afterFinished = 0;
-        while (afterFinished < 2) {
+        while (generation < maxNumberOfGenerations && a1 !== total && a2 !== total) {
           let a1Counter = 0;
           let a2Counter = 0;
-          const pool = [...Array(a1).fill('a1'), ...Array(a2).fill('a2')];
-
-          for (let index = 0; index < total; index++) {
-            const randomIndex = Math.floor(Math.random() * total);
-            if (pool[randomIndex] === 'a1') {
-              a1Counter += 1;
-            } else {
-              a2Counter += 1;
-            }
-            // shuffle
-            [pool[randomIndex], pool[index]] = [pool[index], pool[randomIndex]];
-          }
           const diploid = {a1a1: 0, a2a2: 0, both: 0};
-          for (let index = 0; index < total / 2; index++) {
-            if (pool[index] === 'a1' && pool[total - 1 - index] === 'a1') {
+
+          for (let index = 0; index < size; index++) {
+            const d1 = Math.ceil(Math.random() * total) <= a1 ? 'a1' : 'a2';
+            const d2 = Math.ceil(Math.random() * total) <= a1 ? 'a1' : 'a2';
+
+            if (d1 === 'a1' && d2 === 'a1') {
               diploid.a1a1 += 1;
-            } else if (pool[index] === 'a2' && pool[total - 1 - index] === 'a2') {
+              a1Counter += 2;
+            } else if (d1 === 'a2' && d2 === 'a2') {
               diploid.a2a2 += 1;
+              a2Counter += 2;
             } else {
               diploid.both += 1;
+              a1Counter += 1;
+              a2Counter += 1;
             }
           }
-          diploidData.push(diploid);
 
+          diploidData.push(diploid);
           a1 = a1Counter;
           a2 = a2Counter;
           histogramDataA1.data[generation] = (a1 / total) * 100;
           histogramDataA2.data[generation] = (a2 / total) * 100;
           generation += 1;
-          if (!(generation < maxNumberOfGenerations && a1 !== total && a2 !== total)) {
-            afterFinished += 1;
-          }
         }
 
         population.generation = Math.min(generation, maxNumberOfGenerations);
         population.allele = a1 === total ? 'A1' : 'A2';
         population.histogramData = {a1: histogramDataA1, a2: histogramDataA2};
+        population.diploidData = diploidData;
       });
     },
   },
 
-  computed: {
-    diploidData(): any {
-      // to avoid tslinter check, it do not validate data attributes
-      const that: any = this;
-      // data bind
-      const populations: any = that.populations;
-      if (populations.length > 0) {
-        return populations.reduce((product: any, population: any) => {
-          product.push(population.diploidData);
-          return product;
-        }, []);
-      }
-      return [];
-    },
-  },
+  computed: {},
 
   mounted() {
     const that: any = this;
 
-    that.createPopulation(); // to add attributes
+    that.createPopulationForm(); // to add attributes
 
     that.population.name = 'População Pequena';
     that.population.size = 40;
