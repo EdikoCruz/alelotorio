@@ -2,7 +2,6 @@
   <div class="alleles-histogram">
     <line-chart
       :data="data"
-      :colors="colors"
       :messages="{empty: 'Sem dados'}"
       legend="bottom"
       xtitle="Geração"
@@ -15,36 +14,42 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component({
   computed: {
-    colors(): string[] {
-      const that: any = this;
-      const a1Color: string = that.a1Color || '#cfd8dc';
-      const a2Color: string = that.a2Color || '#607d8b';
-      const populations: any = that.populations;
-
-      if (populations) {
-        return populations.reduce((product: any, p: any) => {
-          product.push(a1Color);
-          product.push(a2Color);
-          return product;
-        }, []);
-      }
-      return [a1Color, a2Color];
-    },
     data(): any[] {
       const that: any = this;
       // data bind
       const populations: any = that.populations;
       const population: any = that.population;
+      const a1Color: string = that.a1Color || '#cfd8dc';
+      const a2Color: string = that.a2Color || '#607d8b';
+      const full: string = that.full;
       const attribute: string = that.attribute || 'histogramData';
 
       if (populations) {
         return populations.reduce((product: any[], p: any) => {
-          product.push(p[attribute].a1);
-          product.push(p[attribute].a2);
+          if (!full) {
+            if (p.allele === 'A1') {
+              product.push({...p[attribute].a1, color: a1Color});
+            } else {
+              product.push({...p[attribute].a2, color: a2Color});
+            }
+          } else {
+            product.push({...p[attribute].a1, color: a1Color});
+            product.push({...p[attribute].a2, color: a2Color});
+          }
           return product;
         }, []);
       }
-      return [population[attribute].a1, population[attribute].a2];
+      if (!full) {
+        if (population.allele === 'A1') {
+          return [{...population[attribute].a1, color: a1Color}];
+        } else {
+          return [{...population[attribute].a2, color: a2Color}];
+        }
+      }
+      return [
+        {...population[attribute].a1, color: a1Color},
+        {...population[attribute].a2, color: a2Color}
+      ];
     },
   },
 })
@@ -54,6 +59,7 @@ export default class AllelesHistogram extends Vue {
   @Prop() private a1Color!: string;
   @Prop() private a2Color!: string;
   @Prop() private attribute!: string;
+  @Prop() private full!: boolean;
 }
 </script>
 

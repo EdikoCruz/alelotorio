@@ -71,6 +71,7 @@
           class="col s12 l5"
           :populations="populations"
           :attribute="tabs.lean ? 'histogramDataCleaned' : 'histogramData'"
+          :full="!tabs.lean"
           :a1-color="config.colors.a1"
           :a2-color="config.colors.a2" />
         <alleles-table
