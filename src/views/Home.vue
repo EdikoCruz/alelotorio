@@ -61,17 +61,20 @@
       </ul>
 
       <div class="col s12">
-        <div class="col s12 center-align">
-          <p>{{tabs.lean ? 'Enxuto' : 'Completo'}}</p>
+        <div class="col s12 l2">
+          <pie-chart
+            :data="allelesData"
+            :colors="['#cfd8dc',config.colors.a1, config.colors.a2]"
+            :donut="true" />
         </div>
         <alleles-histogram
-          class="col s12 l6"
+          class="col s12 l5"
           :populations="populations"
           :attribute="tabs.lean ? 'histogramDataCleaned' : 'histogramData'"
           :a1-color="config.colors.a1"
           :a2-color="config.colors.a2" />
         <alleles-table
-          class="col s12 l6"
+          class="col s12 l5"
           :populations="populations" />
       </div>
     </div>
@@ -155,7 +158,7 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
         name: '',
         size: '',
         // if allele is fixed
-        allele: '',
+        allele: '-',
         generation: '',
         // charts data
         histogramData: {a1: {}, a2: {}},
@@ -274,7 +277,26 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
     },
   },
 
-  computed: {},
+  computed: {
+    allelesData(): any[] {
+      const that: any = this;
+      // data bind
+      const populations: any = that.populations;
+      const r = [['-', 0], ['a1', 0], ['a2', 0]];
+
+      populations.forEach((p: any) => {
+        if (p.allele === 'A1') {
+          r[1][1] = Number(r[1][1]) + 1;
+        } else if (p.allele === 'A2') {
+          r[2][1] = Number(r[2][1]) + 1;
+        } else {
+          r[0][1] = Number(r[0][1]) + 1;
+        }
+      });
+
+      return r;
+    },
+  },
 
   mounted() {
     const that: any = this;
