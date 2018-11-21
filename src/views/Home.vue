@@ -121,6 +121,11 @@ import { finished } from 'stream';
         minSize: 4,
         maxSize: 1000,
         step: 4,
+        colors: {
+          a1: '#F012BE',
+          a2: '#0074D9',
+          both: '#B10DC9',
+        },
       },
       population: {},
       populations: [],
@@ -128,16 +133,16 @@ import { finished } from 'stream';
   },
 
   methods: {
-    clearPopulation(): void {
-      // to avoid tslinter check, it do not validate data attributes
-      const that: any = this;
+    createPopulation(): void {
+      const that: any = this; // tslinter's data attributes bug
       that.population = {
+        // population attributes
         name: '',
         size: '',
-        // if fixed
+        // if allele is fixed
         allele: '',
         generation: '',
-        // data
+        // charts data
         histogramData: {a1: {}, a2: {}},
         diploidData: [],
       };
@@ -146,7 +151,6 @@ import { finished } from 'stream';
       // M is global
       // @ts-ignore
       const toast = M.toast;
-      // to avoid tslinter check, it do not validate data attributes
       const that: any = this;
       // data bind
       const population: any = that.population;
@@ -154,7 +158,7 @@ import { finished } from 'stream';
       const minSize = that.config.minSize;
       const maxSize = that.config.maxSize;
       const step = that.config.step;
-      // population validation
+      // population attributes
       const size = Number(population.size);
       const name = population.name;
 
@@ -168,16 +172,14 @@ import { finished } from 'stream';
         toast({html: `O tamanho não pode ser maior ${maxSize}`});
       } else {
         populations.push(population);
-        that.clearPopulation();
+        that.createPopulation();
       }
     },
     removePopulation(index): void {
-      // to avoid tslinter check, it do not validate data attributes
       const that: any = this;
       that.populations.splice(index, 1);
     },
     generateHistogram(): void {
-      // to avoid tslinter check, it do not validate data attributes
       const that: any = this;
       // data bind
       const populations: any = that.populations;
@@ -279,10 +281,9 @@ import { finished } from 'stream';
   },
 
   mounted() {
-    // to avoid tslinter check, it do not validate data attributes
     const that: any = this;
 
-    that.clearPopulation();
+    that.createPopulation(); // to add attributes
 
     that.population.name = 'População Pequena';
     that.population.size = 40;
