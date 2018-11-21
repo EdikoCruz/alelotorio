@@ -2,7 +2,7 @@
   <div class="home container">
     
     <!-- POPULATION FORM -->
-    <form class="col s12" @submit.prevent>
+    <form class="col s12 vertical-margin" @submit.prevent>
       <div class="row">
         <div class="input-field col s12 l5">
           <input id="population-name" type="text" v-model="population.name">
@@ -19,7 +19,7 @@
     </form>
 
     <!-- POPULATIONS -->
-    <table class="striped">
+    <table class="striped centered vertical-margin">
       <thead>
         <tr>
             <th>Nome</th>
@@ -48,7 +48,15 @@
     </table>
 
      <!-- HISTOGRAM -->
-    <table class="striped vertical-margin">
+     <line-chart
+      :data="histogramData"
+      :colors="histogramColors"
+      :messages="{empty: 'Sem dados'}"
+      legend="bottom"
+      xtitle="Geração"
+      ytitle="Porcentagem do alelo"
+      height="500px" />
+    <table class="striped centered vertical-margin">
       <thead>
         <tr>
             <th>Nome</th>
@@ -59,19 +67,11 @@
       <tbody>
         <tr v-for="(p, i) in populations" :key="i">
           <td>{{p.name}}</td>
-          <td>{{p.allele}}</td>
-          <td>{{p.generation}}</td>
+          <td>{{p.allele || 'Sem dados'}}</td>
+          <td>{{p.generation || 'Sem dados'}}</td>
         </tr>
       </tbody>
     </table>
-    <line-chart
-      :data="histogramData"
-      :colors="histogramColors"
-      :messages="{empty: 'Sem dados'}"
-      legend="bottom"
-      xtitle="Geração"
-      ytitle="Porcentagem do alelo"
-      height="500px" />
   </div>
 </template>
 
