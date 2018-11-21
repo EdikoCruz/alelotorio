@@ -211,18 +211,18 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
         const total = population.size * 2;
         const size = population.size;
         const diploidData = [{a1a1: total / 4, a2a2: total / 4, both: total / 2}];
-        const histogramDataA1: any = {name: `${population.name} A1`, data: {0: 50}};
-        const histogramDataA2: any = {name: `${population.name} A2`, data: {0: 50}};
+        const histogramDataA1: any = {name: `${population.name} A1`, data: {1: 50}};
+        const histogramDataA2: any = {name: `${population.name} A2`, data: {1: 50}};
 
-        let generation = 1;
+        let generation = 2;
         while (generation < maxNumberOfGenerations && a1 !== total && a2 !== total) {
           let a1Counter = 0;
           let a2Counter = 0;
           const diploid = {a1a1: 0, a2a2: 0, both: 0};
 
           for (let index = 0; index < size; index++) {
-            const d1 = Math.ceil(Math.random() * total) <= a1 ? 'a1' : 'a2';
-            const d2 = Math.ceil(Math.random() * total) <= a2 ? 'a2' : 'a1';
+            const d2 = Math.ceil(Math.random() * total) <= a1 ? 'a1' : 'a2';
+            const d1 = Math.ceil(Math.random() * total) <= a2 ? 'a2' : 'a1';
 
             if (d1 === 'a1' && d2 === 'a1') {
               diploid.a1a1 += 1;
