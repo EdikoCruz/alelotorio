@@ -48,7 +48,7 @@
     </table>
 
      <!-- HISTOGRAM -->
-     <line-chart
+    <line-chart
       :data="histogramData"
       :colors="histogramColors"
       :messages="{empty: 'Sem dados'}"
@@ -72,16 +72,43 @@
         </tr>
       </tbody>
     </table>
+
+    <!-- POPULATION DIPLOID -->
+    <div class="row">
+      <table class="striped centered vertical-margin">
+        <thead>
+          <tr>
+              <th></th>
+              <th>A1A1</th>
+              <th>A2A2</th>
+              <th>Both</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Geração</td>
+            <td>{{diploidData.length > 0 ? (diploidData[0].length >0 ? diploidData[0][t].a1a1 : 0) : 'Sem dados'}}</td>
+            <td>{{diploidData.length > 0 ? (diploidData[0].length >0 ? diploidData[0][t].a2a2 : 0) : 'Sem dados'}}</td>
+            <td>{{diploidData.length > 0 ? (diploidData[0].length >0 ? diploidData[0][t].both : 0) : 'Sem dados'}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="range-field">
+        <input type="range" min="0" :max="diploidData.length > 0 ? diploidData[0].length-1 : 0" v-model="t"/>
+      </p>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { constants } from 'http2';
+import { finished } from 'stream';
 
 @Component({
   data() {
     return {
+      t: 0,
       config: {
         maxNumberOfGenerations: 9999,
         minSize: 4,
@@ -105,6 +132,7 @@ import { constants } from 'http2';
         generation: '',
         // data
         histogramData: {a1: {}, a2: {}},
+        diploidData: [],
       };
     },
     addPopulation(): void {
@@ -152,27 +180,47 @@ import { constants } from 'http2';
         let a1 = population.size;
         let a2 = population.size;
         const total = population.size * 2;
+        const diploidData = population.diploidData;
         const histogramDataA1: any = {name: `${population.name} A1`, data: {0: 50}};
         const histogramDataA2: any = {name: `${population.name} A2`, data: {0: 50}};
 
         let generation = 1;
-        while (generation < maxNumberOfGenerations && a1 !== total && a2 !== total) {
+        let afterFinished = 0;
+        while (afterFinished < 2) {
           let a1Counter = 0;
           let a2Counter = 0;
-          const a1Percentage = a1 / total;
+          const pool = [...Array(a1).fill('a1'), ...Array(a2).fill('a2')];
 
           for (let index = 0; index < total; index++) {
-            if (Math.random() < a1Percentage) {
+            const randomIndex = Math.floor(Math.random() * total);
+            if (pool[randomIndex] === 'a1') {
               a1Counter += 1;
             } else {
               a2Counter += 1;
             }
+            // shuffle
+            [pool[randomIndex], pool[index]] = [pool[index], pool[randomIndex]];
           }
+          const diploid = {a1a1: 0, a2a2: 0, both: 0};
+          for (let index = 0; index < total / 2; index++) {
+            if (pool[index] === 'a1' && pool[total - 1 - index] === 'a1') {
+              diploid.a1a1 += 1;
+            } else if (pool[index] === 'a2' && pool[total - 1 - index] === 'a2') {
+              diploid.a2a2 += 1;
+            } else {
+              diploid.both += 1;
+            }
+          }
+          diploidData.push(diploid);
+
           a1 = a1Counter;
           a2 = a2Counter;
           histogramDataA1.data[generation] = (a1 / total) * 100;
           histogramDataA2.data[generation] = (a2 / total) * 100;
           generation += 1;
+          if (!(generation < maxNumberOfGenerations && a1 !== total && a2 !== total)) {
+            afterFinished += 1;
+          }
         }
 
         population.generation = Math.min(generation, maxNumberOfGenerations);
@@ -184,7 +232,9 @@ import { constants } from 'http2';
 
   computed: {
     histogramColors(): string[] {
+      // to avoid tslinter check, it do not validate data attributes
       const that: any = this;
+      // data bind
       const populations: any = that.populations;
 
       return populations.reduce((product: any, population: any) => {
@@ -205,6 +255,19 @@ import { constants } from 'http2';
 
         return product;
       }, []);
+    },
+    diploidData(): any {
+      // to avoid tslinter check, it do not validate data attributes
+      const that: any = this;
+      // data bind
+      const populations: any = that.populations;
+      if (populations.length > 0) {
+        return populations.reduce((product: any, population: any) => {
+          product.push(population.diploidData);
+          return product;
+        }, []);
+      }
+      return [];
     },
   },
 
