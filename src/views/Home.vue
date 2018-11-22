@@ -96,7 +96,6 @@
         <alleles-histogram
           class="col s12 l6"
           :population="population"
-          :partial="true"
           :a1-color="config.colors.a1"
           :a2-color="config.colors.a2" />
         <diploid-by-generation
