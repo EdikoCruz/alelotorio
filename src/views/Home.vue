@@ -46,7 +46,7 @@
     </table>
 
     <div class="row">
-      <ul class="col s12 tabs teal lighten-4">
+      <ul class="col s12 tabs teal lighten-5">
         <li class="tab">
           <a
             :class="[ tabs.show === -1 ? 'active' : '']"
@@ -58,22 +58,12 @@
             @click="tabs.show = i">{{p.name}}</a>
         </li>
       </ul>
-      <ul class="col s12 tabs teal lighten-5" v-show="tabs.show === -1">
-        <li class="tab col s6">
-          <a :class="[ tabs.lean ? '' : 'active']" @click="tabs.lean = false">Completo</a>
-        </li>
-        <li class="tab col s6">
-          <a :class="[ tabs.lean ? 'active' : '']" @click="tabs.lean = true">Enxuto</a>
-        </li>
-      </ul>
     </div>
 
     <div class="row vertical-margin" v-show="tabs.show === -1">
       <alleles-histogram
         class="col s12"
         :populations="populations"
-        :attribute="tabs.lean ? 'histogramDataCleaned' : 'histogramData'"
-        :partial="tabs.lean"
         :a1-color="config.colors.a1"
         :a2-color="config.colors.a2" />
 
@@ -93,6 +83,7 @@
     <div class="row vertical-margin" v-for="(population, i) in populations" :key="i" v-show="tabs.show === i">
       <alleles-histogram
         class="col s12"
+        :partialName="true"
         :population="population"
         :a1-color="config.colors.a1"
         :a2-color="config.colors.a2" />
@@ -125,7 +116,6 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
   data() {
     return {
       tabs: {
-        lean: false,
         show: -1,
       },
       config: {
