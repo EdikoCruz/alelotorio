@@ -6,7 +6,7 @@
       height="200px"
       legend="bottom"
       xtitle="Geração"
-      ytitle="Alelo na população" />
+      ytitle="Alelo %" />
   </div>
 </template>
 
