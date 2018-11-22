@@ -1,7 +1,5 @@
 <template>
   <div class="home container">
-    
-    <!-- POPULATION FORM -->
     <form class="col s12 vertical-margin" @submit.prevent>
       <div class="row">
         <div class="input-field col s12 l5">
@@ -19,8 +17,6 @@
     </form>
 
     <div class="divider"></div>
-
-    <!-- POPULATIONS -->
     <table class="striped centered vertical-margin">
       <thead>
         <tr>
@@ -49,8 +45,25 @@
       </tfoot>
     </table>
 
+    <div class="row">
+      <div class="col s12">
+        <ul class="tabs">
+          <li class="tab">
+            <a
+              :class="[ tabs.show === -1 ? 'active' : '']"
+              @click="tabs.show = -1">Todos</a>
+          </li>
+          <li class="tab" v-for="(p, i) in populations" :key="i">
+            <a
+              :class="[ tabs.show === i ? 'active' : '']"
+              @click="tabs.show = i">{{p.name}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
     <div class="divider"></div>
-    <div class="row vertical-margin">
+
+    <div class="row vertical-margin" v-show="tabs.show === -1">
       <ul class="col s12 tabs">
         <li class="tab col s6">
           <a :class="[ tabs.lean ? '' : 'active']" @click="tabs.lean = false">Completo</a>
@@ -61,12 +74,10 @@
       </ul>
 
       <div class="col s12">
-        <div class="col s12 l2">
-          <pie-chart
-            :data="allelesData"
-            :colors="['#cfd8dc',config.colors.a1, config.colors.a2]"
-            :donut="true" />
-        </div>
+        <alleles-donut
+        :populations="populations"
+        :a1-color="config.colors.a1"
+        :a2-color="config.colors.a2" />
         <alleles-histogram
           class="col s12 l5"
           :populations="populations"
@@ -80,27 +91,12 @@
       </div>
     </div>
 
-    <div class="divider"></div>
-
-    <!-- DIPLOIDS -->
     <div class="row vertical-margin">
-      <diploid-by-generation
-        class="col s12 l4"
-        v-for="(population, i) in populations"
-        :key="i"
-        :population="population"
-        :a1-color="config.colors.a1"
-        :both-color="config.colors.both"
-        :a2-color="config.colors.a2" />
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="row vertical-margin">
-      <div v-for="(population, i) in populations" :key="i">
+      <div class="valign-wrapper" v-for="(population, i) in populations" :key="i" v-show="tabs.show === i">
         <alleles-histogram
           class="col s12 l6"
           :population="population"
+          :partial="true"
           :a1-color="config.colors.a1"
           :a2-color="config.colors.a2" />
         <diploid-by-generation
@@ -111,19 +107,20 @@
           :a2-color="config.colors.a2" />
       </div>
     </div>
-
-
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import AllelesDonut from '@/components/AllelesDonut.vue';
 import AllelesHistogram from '@/components/AllelesHistogram.vue';
 import AllelesTable from '@/components/AllelesTable.vue';
 import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
 
+
 @Component({
   components: {
+    AllelesDonut,
     AllelesHistogram,
     AllelesTable,
     DiploidByGeneration,
@@ -133,6 +130,7 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
     return {
       tabs: {
         lean: false,
+        show: -1,
       },
       config: {
         maxNumberOfGenerations: 5000,
@@ -278,26 +276,7 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
     },
   },
 
-  computed: {
-    allelesData(): any[] {
-      const that: any = this;
-      // data bind
-      const populations: any = that.populations;
-      const r = [['-', 0], ['a1', 0], ['a2', 0]];
-
-      populations.forEach((p: any) => {
-        if (p.allele === 'A1') {
-          r[1][1] = Number(r[1][1]) + 1;
-        } else if (p.allele === 'A2') {
-          r[2][1] = Number(r[2][1]) + 1;
-        } else {
-          r[0][1] = Number(r[0][1]) + 1;
-        }
-      });
-
-      return r;
-    },
-  },
+  computed: {},
 
   mounted() {
     const that: any = this;

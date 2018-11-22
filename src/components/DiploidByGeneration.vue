@@ -1,9 +1,11 @@
 <template>
   <div class="diploid-by-generation center-align">
-    <p><b>{{population.name}}</b></p>
-    <p>Geração {{Number(generation)+1}}</p>
+    
     <table class="striped centered">
       <thead>
+        <tr>
+          <th colspan="3">Geração {{Number(generation)+1}}</th>
+        </tr>
         <tr>
             <th>A1A1</th>
             <th>Ambos</th>
@@ -19,14 +21,16 @@
       </tbody>
     </table>
 
-    <pie-chart
-      :data="data"
-      :colors="[a1Color || '#cfd8dc', bothColor || '#90a4ae', a2Color || '#607d8b']"
-      :donut="true" />
+    <div class="row">
+      <div class="col s6 offset-s3">
+        <pie-chart
+          :data="data"
+          :colors="[a1Color || '#cfd8dc', bothColor || '#90a4ae', a2Color || '#607d8b']"
+          :donut="true" />
+      </div>
+    </div>
 
-    <p class="range-field">
-      <input type="range" min="0" :max="population.diploidData.length - 1" v-model="generation"/>
-    </p>
+    <input type="range" min="0" :max="population.diploidData.length - 1" v-model="generation"/>
   </div>
 </template>
 

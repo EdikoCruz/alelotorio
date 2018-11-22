@@ -5,7 +5,7 @@
       :messages="{empty: 'Sem dados'}"
       legend="bottom"
       xtitle="Geração"
-      ytitle="Porcentagem do alelo" />
+      ytitle="Alelo na população" />
   </div>
 </template>
 
@@ -17,39 +17,24 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
     data(): any[] {
       const that: any = this;
       // data bind
-      const populations: any = that.populations;
-      const population: any = that.population;
+      const populations: any = that.populations || [that.population];
       const a1Color: string = that.a1Color || '#cfd8dc';
       const a2Color: string = that.a2Color || '#607d8b';
       const partial: string = that.partial;
       const attribute: string = that.attribute || 'histogramData';
 
-      if (populations) {
-        return populations.reduce((product: any[], p: any) => {
-          if (partial) {
-            if (p.allele === 'A1') {
-              product.push({...p[attribute].a1, color: a1Color});
-            } else {
-              product.push({...p[attribute].a2, color: a2Color});
-            }
-          } else {
-            product.push({...p[attribute].a1, color: a1Color});
-            product.push({...p[attribute].a2, color: a2Color});
-          }
-          return product;
-        }, []);
-      }
-      if (partial) {
-        if (population.allele === 'A1') {
-          return [{...population[attribute].a1, color: a1Color}];
+
+      return populations.reduce((product: any[], p: any) => {
+        if (partial && p.allele !== '-') {
+          if (p.allele === 'A1') { product.push({...p[attribute].a1, color: a1Color}); }
+          if (p.allele === 'A2') { product.push({...p[attribute].a2, color: a2Color}); }
         } else {
-          return [{...population[attribute].a2, color: a2Color}];
+          product.push({...p[attribute].a1, color: a1Color});
+          product.push({...p[attribute].a2, color: a2Color});
         }
-      }
-      return [
-        {...population[attribute].a1, color: a1Color},
-        {...population[attribute].a2, color: a2Color}
-      ];
+        return product;
+      }, []);
+
     },
   },
 })
