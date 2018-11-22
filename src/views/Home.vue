@@ -73,38 +73,39 @@
         </li>
       </ul>
 
-      <div class="col s12">
-        <alleles-donut
+      <alleles-histogram
+        class="col s12"
         :populations="populations"
+        :attribute="tabs.lean ? 'histogramDataCleaned' : 'histogramData'"
+        :partial="tabs.lean"
         :a1-color="config.colors.a1"
         :a2-color="config.colors.a2" />
-        <alleles-histogram
-          class="col s12 l5"
-          :populations="populations"
-          :attribute="tabs.lean ? 'histogramDataCleaned' : 'histogramData'"
-          :partial="tabs.lean"
-          :a1-color="config.colors.a1"
-          :a2-color="config.colors.a2" />
+
+      <div class="col s12">
+        <div class="col s12 l6">
+          <alleles-donut
+            :populations="populations"
+            :a1-color="config.colors.a1"
+            :a2-color="config.colors.a2" />
+        </div>
         <alleles-table
-          class="col s12 l5"
+          class="col s12 l6"
           :populations="populations" />
       </div>
     </div>
 
-    <div class="row vertical-margin">
-      <div class="valign-wrapper" v-for="(population, i) in populations" :key="i" v-show="tabs.show === i">
-        <alleles-histogram
-          class="col s12 l6"
-          :population="population"
-          :a1-color="config.colors.a1"
-          :a2-color="config.colors.a2" />
-        <diploid-by-generation
-          class="col s12 l6"
-          :population="population"
-          :a1-color="config.colors.a1"
-          :both-color="config.colors.both"
-          :a2-color="config.colors.a2" />
-      </div>
+    <div class="row vertical-margin" v-for="(population, i) in populations" :key="i" v-show="tabs.show === i">
+      <alleles-histogram
+        class="col s12"
+        :population="population"
+        :a1-color="config.colors.a1"
+        :a2-color="config.colors.a2" />
+      <diploid-by-generation
+        class="col s12"
+        :population="population"
+        :a1-color="config.colors.a1"
+        :both-color="config.colors.both"
+        :a2-color="config.colors.a2" />
     </div>
   </div>
 </template>

@@ -1,11 +1,9 @@
 <template>
   <div class="alleles-donut">
-    <div class="col s12 l2">
-      <pie-chart
-        :data="data"
-        :colors="[a1Color, a2Color]"
-        :donut="true" />
-    </div>
+    <pie-chart
+      :data="data"
+      :colors="[a1Color, a2Color]"
+      :donut="true" />
   </div>
 </template>
 

@@ -1,8 +1,9 @@
 <template>
   <div class="alleles-histogram">
     <line-chart
-      :data="data"
+      :data="data"      
       :messages="{empty: 'Sem dados'}"
+      height="200px"
       legend="bottom"
       xtitle="Geração"
       ytitle="Alelo na população" />
