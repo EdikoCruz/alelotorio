@@ -62,20 +62,20 @@
 
     <div class="row vertical-margin" v-show="tabs.show === -1">
       <alleles-histogram
-        class="col s12"
+        class="col s12 vertical-margin"
         :populations="populations"
         :a1-color="config.colors.a1"
         :a2-color="config.colors.a2" />
 
       <div class="col s12">
-        <div class="col s12 l6">
+        <div class="col s6 offset-s3 l6">
           <alleles-donut
             :populations="populations"
             :a1-color="config.colors.a1"
             :a2-color="config.colors.a2" />
         </div>
         <alleles-table
-          class="col s12 l6"
+          class="col s12 l6 vertical-margin"
           :populations="populations" />
       </div>
     </div>

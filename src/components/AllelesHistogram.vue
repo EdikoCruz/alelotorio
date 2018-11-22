@@ -4,7 +4,6 @@
       :data="data"      
       :messages="{empty: 'Sem dados'}"
       height="200px"
-      legend="bottom"
       xtitle="Geração"
       ytitle="Alelo %" />
   </div>
