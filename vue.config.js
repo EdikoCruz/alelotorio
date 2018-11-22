@@ -1,5 +1,8 @@
 // vue.config.js
 module.exports = {
   // options...
-  baseUrl: "/alelotorio/"
+  baseUrl: "/alelotorio/",
+  pwa: {
+    themeColor: "#fff"
+  }
 }
