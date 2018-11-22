@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/alelotorio/js/about.69ad75b8.js"
   },
   {
-    "revision": "096d5e1c270207268fe83c34180b948d",
+    "revision": "8e8cb37b2c7a945cc75bcb53efca0dfd",
     "url": "/alelotorio/index.html"
   },
   {
