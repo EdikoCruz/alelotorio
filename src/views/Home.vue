@@ -46,25 +46,19 @@
     </table>
 
     <div class="row">
-      <div class="col s12">
-        <ul class="tabs">
-          <li class="tab">
-            <a
-              :class="[ tabs.show === -1 ? 'active' : '']"
-              @click="tabs.show = -1">Todos</a>
-          </li>
-          <li class="tab" v-for="(p, i) in populations" :key="i">
-            <a
-              :class="[ tabs.show === i ? 'active' : '']"
-              @click="tabs.show = i">{{p.name}}</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="divider"></div>
-
-    <div class="row vertical-margin" v-show="tabs.show === -1">
-      <ul class="col s12 tabs">
+      <ul class="col s12 tabs teal lighten-4">
+        <li class="tab">
+          <a
+            :class="[ tabs.show === -1 ? 'active' : '']"
+            @click="tabs.show = -1">Todos</a>
+        </li>
+        <li class="tab" v-for="(p, i) in populations" :key="i">
+          <a
+            :class="[ tabs.show === i ? 'active' : '']"
+            @click="tabs.show = i">{{p.name}}</a>
+        </li>
+      </ul>
+      <ul class="col s12 tabs teal lighten-5" v-show="tabs.show === -1">
         <li class="tab col s6">
           <a :class="[ tabs.lean ? '' : 'active']" @click="tabs.lean = false">Completo</a>
         </li>
@@ -72,7 +66,9 @@
           <a :class="[ tabs.lean ? 'active' : '']" @click="tabs.lean = true">Enxuto</a>
         </li>
       </ul>
+    </div>
 
+    <div class="row vertical-margin" v-show="tabs.show === -1">
       <alleles-histogram
         class="col s12"
         :populations="populations"
@@ -302,5 +298,11 @@ export default class Home extends Vue {}
 <style lang="scss">
 .vertical-margin{
   margin: 30px 0;
+}
+.tabs .tab a {
+  font-weight: bold;
+}
+.tabs .tab a.active {
+  font-weight: bolder;
 }
 </style>
