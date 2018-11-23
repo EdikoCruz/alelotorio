@@ -8,6 +8,7 @@
               <p class="center-align title"><b>{{population.name}}</b></p>
               <p class="center-align"><b>Tamanho: </b>{{population.size}}</p>
               <p class="center-align"><b>Repetições: </b>{{repetitions}}</p>
+              <p class="center-align"><b>Máximo de gerações: </b>{{config.maxNumberOfGenerations}}</p>
             </div>
           </div>
         </div>
@@ -16,20 +17,27 @@
         <div class="card horizontal">
           <div class="card-stacked">
             <div class="card-content">
-              <p class="center-align">Tamanho</p>
+              <p class="center-align">TAMANHO</p>
               <input
                 type="range"
                 :min="config.minSize"
                 :max="config.maxSize"
                 :step="config.step"
                 v-model="population.size"/>
-              <p class="center-align">Repetições</p>
+              <p class="center-align">REPETIÇÕES</p>
               <input
                 type="range"
                 :min="config.minNumberOfRepetions"
                 :max="config.maxNumberOfRepetions"
                 :step="config.stepNumberOfRepetions"
                 v-model="repetitions"/>
+              <p class="center-align">MÁXIMO DE GERAÇÕES</p>
+              <input
+                type="range"
+                :min="100"
+                :max="10000"
+                :step="50"
+                v-model="config.maxNumberOfGenerations"/>
             </div>
           </div>
         </div>
@@ -43,8 +51,8 @@
         </button>
       </div>
 
-      <div class="col s12 center-align vertical-margin">
-        <div class="preloader-wrapper big active" v-show="loading">
+      <div class="col s12 center-align vertical-margin" v-show="loading">
+        <div class="preloader-wrapper big active">
           <div class="spinner-layer spinner-green-only">
             <div class="circle-clipper left">
               <div class="circle"></div>
@@ -57,18 +65,23 @@
         </div>
       </div>
 
-      <div class="col s12 l8">
+      <div class="col s12 l8 vertical-margin" v-show="!loading">
         <column-chart
-          v-show="!loading"
           ytitle="Fixações"
           xtitle="Geração"
           :data="generationsData" />
+        <h6 class="center-align"><b>Agrupar por: {{factor}}</b></h6>
+        <input
+          type="range"
+          :min="Math.ceil((population.lastRun || population.size) / 8)"
+          :max="Math.ceil((population.lastRun || population.size) / 2)"
+          :step="1"
+          v-model="factor"/>
       </div>
-      <div class="col s12 l4">
+      <div class="col s12 l4 vertical-margin" v-show="!loading">
         <pie-chart
-          v-show="!loading"
           :data="allelesData"
-          :colors="[config.colors.a1, config.colors.both, config.colors.a2]"
+          :colors="[config.colors.diploids.a2a2, config.colors.diploids.both, config.colors.diploids.a1a1]"
           :donut="true" />
       </div>
     </div>
@@ -85,23 +98,31 @@ import { Component, Vue } from 'vue-property-decorator';
     return {
       loading: false,
       repetitions: 200,
+      factor: 50,
       config: {
-        maxNumberOfGenerations: 10000,
+        maxNumberOfGenerations: 5000,
         maxNumberOfRepetions: 1000,
         minNumberOfRepetions: 100,
         stepNumberOfRepetions: 50,
-        minSize: 4,
+        minSize: 40,
         maxSize: 1000,
-        step: 4,
+        step: 20,
         colors: {
-          a1: '#f48fb1',
-          a2: '#9fa8da',
-          both: '#ce93d8',
+          alleles: {
+            a1: '#f48fb1',
+            a2: '#9fa8da',
+          },
+          diploids: {
+            a1a1: '#ffe082',
+            a2a2: '#bf360c',
+            both: '#ff9100',
+          },
         },
       },
       population: {
         name: 'Aquários',
         size: 200,
+        lastRun: false,
         alleles: {
           a1: 0,
           a2: 0,
@@ -128,7 +149,6 @@ import { Component, Vue } from 'vue-property-decorator';
       const histogramMultiplicity: number = that.config.histogramMultiplicity;
       const total = population.size * 2;
       const size = population.size;
-      const factor = that.getFactor();
       const alleles = {a1: 0, a2: 0, a: 0};
       const generations: any = {};
 
@@ -167,12 +187,12 @@ import { Component, Vue } from 'vue-property-decorator';
           alleles.a += 1;
         }
 
-        const leanGen = Math.floor(generation / factor);
-        generations[leanGen] = generations[leanGen] || 0;
-        generations[leanGen] += 1;
+        generations[generation] = generations[generation] || 0;
+        generations[generation] += 1;
       }
 
       population.alleles = alleles;
+      population.lastRun = size;
       population.generations = generations;
       // @ts-ignore
       this.loading = false;
@@ -191,19 +211,28 @@ import { Component, Vue } from 'vue-property-decorator';
       // data bind
       const population: any = that.population;
       return [
-        ['A1', population.alleles.a1],
-        ['Ambos', population.alleles.a],
-        ['A2', population.alleles.a2],
+        ['A2A2', population.alleles.a2],
+        ['A1A2 ou A2A1', population.alleles.a],
+        ['A1A1', population.alleles.a1],
       ];
     },
     generationsData(): any[] {
       const that: any = this;
       // data bind
       const population: any = that.population;
-      const factor: any = that.getFactor();
+      const factor: any = that.factor;
 
-      return Object.keys(population.generations).reduce((p: any, c: any) => {
-        p.push([Number(c) * factor, population.generations[c]]);
+      const g: any = {};
+
+      Object.keys(population.generations).forEach((c: any) => {
+        const leanG = Math.floor(Number(c) / factor);
+        const v = population.generations[c];
+        g[leanG] = g[leanG] || 0;
+        g[leanG] += v;
+      });
+
+      return Object.keys(g).reduce((p: any, c: any) => {
+        p.push([c * factor, g[c]]);
         return p;
       }, []);
     },

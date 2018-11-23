@@ -62,21 +62,21 @@
 
     <div class="row vertical-margin" v-show="tabs.show === -1">
       <alleles-histogram
-        class="col s12"
+        class="col s12 vertical-margin"
         :populations="populations"
-        :a1-color="config.colors.a1"
-        :a2-color="config.colors.a2" />
-
+        :a1-color="config.colors.alleles.a1"
+        :a2-color="config.colors.alleles.a2" />
       <div class="col s12">
-        <div class="col s12 l6">
-          <alleles-donut
-            :populations="populations"
-            :a1-color="config.colors.a1"
-            :a2-color="config.colors.a2" />
-        </div>
         <alleles-table
-          class="col s12 l6"
-          :populations="populations" />
+        class="col s12 l8"
+        :a1-color="config.colors.alleles.a1"
+        :a2-color="config.colors.alleles.a2"
+        :populations="populations" />
+        <alleles-donut
+          class="col s12 l4"
+          :populations="populations"
+          :a1-color="config.colors.alleles.a1"
+          :a2-color="config.colors.alleles.a2" />
       </div>
     </div>
 
@@ -85,14 +85,14 @@
         class="col s12"
         :partialName="true"
         :population="population"
-        :a1-color="config.colors.a1"
-        :a2-color="config.colors.a2" />
+        :a1-color="config.colors.alleles.a1"
+        :a2-color="config.colors.alleles.a2" />
       <diploid-by-generation
         class="col s12"
         :population="population"
-        :a1-color="config.colors.a1"
-        :both-color="config.colors.both"
-        :a2-color="config.colors.a2" />
+        :a1-color="config.colors.diploids.a1a1"
+        :both-color="config.colors.diploids.both"
+        :a2-color="config.colors.diploids.a2a2" />
     </div>
   </div>
 </template>
@@ -125,9 +125,15 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
         maxSize: 1000,
         step: 4,
         colors: {
-          a1: '#f48fb1',
-          a2: '#9fa8da',
-          both: '#ce93d8',
+          alleles: {
+            a1: '#f48fb1',
+            a2: '#9fa8da',
+          },
+          diploids: {
+            a1a1: '#ffe082',
+            a2a2: '#bf360c',
+            both: '#ff9100',
+          },
         },
       },
       population: {},
@@ -294,5 +300,8 @@ export default class Home extends Vue {}
 }
 .tabs .tab a.active {
   font-weight: bolder;
+}
+.chartjs-render-monitor {
+  margin: auto;
 }
 </style>

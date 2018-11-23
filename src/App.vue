@@ -19,6 +19,7 @@
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://use.fontawesome.com/releases/v5.5.0/css/all.css');
 
 .tabs.tabs-transparent .tab a.router-link-active.router-link-exact-active{
   color: #fff;
