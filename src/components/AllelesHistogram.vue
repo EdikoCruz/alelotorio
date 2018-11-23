@@ -3,6 +3,7 @@
     <line-chart
       :data="data"      
       :messages="{empty: 'Sem dados'}"
+      :legend="false"
       height="200px"
       xtitle="Geração"
       ytitle="Alelo %" />
@@ -26,7 +27,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
       return populations.reduce((product: any[], p: any) => {
         product.push({...p[attribute].a1, color: a1Color, name: partialName ? 'A1' : p[attribute].a1.name});
-        product.push({...p[attribute].a2, color: a2Color, name: partialName ? 'A1' : p[attribute].a2.name});
+        product.push({...p[attribute].a2, color: a2Color, name: partialName ? 'A2' : p[attribute].a2.name});
         return product;
       }, []);
 

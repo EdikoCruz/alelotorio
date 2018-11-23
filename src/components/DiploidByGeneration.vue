@@ -1,15 +1,17 @@
 <template>
   <div class="diploid-by-generation center-align">
     
-    <table class="striped centered">
+    <table class="striped centered vertical-margin">
       <thead>
         <tr>
-          <th colspan="3">Geração {{Number(generation)+1}}</th>
+            <th>A1A1</th>
+            <th>A1A2 ou A2A1</th>
+            <th>A2A2</th>
         </tr>
         <tr>
-            <th>A1A1</th>
-            <th>Ambos</th>
-            <th>A2A2</th>
+            <th><i class="fas fa-fish fa-2x fa-flip-horizontal a1a1"></i></th>
+            <th><i class="fas fa-fish fa-2x fa-flip-horizontal both"></i></th>
+            <th><i class="fas fa-fish fa-2x fa-flip-horizontal a2a2"></i></th>
         </tr>
       </thead>
       <tbody>
@@ -21,16 +23,18 @@
       </tbody>
     </table>
 
+    <h6><b>Geração {{Number(generation)+1}}</b></h6>
+    <input type="range" min="0" :max="population.diploidData.length - 1" v-model="generation"/>
+
     <div class="row">
       <div class="col s6 offset-s3">
         <pie-chart
           :data="data"
-          :colors="[a1Color || '#cfd8dc', bothColor || '#90a4ae', a2Color || '#607d8b']"
+          :legend="false"
+          :colors="[a2Color || '#607d8b',bothColor || '#90a4ae', a1Color || '#cfd8dc']"
           :donut="true" />
       </div>
     </div>
-
-    <input type="range" min="0" :max="population.diploidData.length - 1" v-model="generation"/>
   </div>
 </template>
 
@@ -51,9 +55,9 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
       const generation = that.generation;
 
       return [
-        ['A1A1', population.diploidData.length > 0 ? population.diploidData[generation].a1a1 : '-'],
-        ['Ambos', population.diploidData.length > 0 ? population.diploidData[generation].both : '-'],
         ['A2A2', population.diploidData.length > 0 ? population.diploidData[generation].a2a2 : '-'],
+        ['A1A2 ou A2A1', population.diploidData.length > 0 ? population.diploidData[generation].both : '-'],
+        ['A1A1', population.diploidData.length > 0 ? population.diploidData[generation].a1a1 : '-'],
       ];
     },
   },
@@ -67,4 +71,13 @@ export default class DiploidByGeneration extends Vue {
 </script>
 
 <style scoped lang="scss">
+.a1a1 {
+  color: #ffe082;
+}
+.a2a2 {
+  color: #bf360c;
+}
+.both {
+  color: #ff9100;
+}
 </style>

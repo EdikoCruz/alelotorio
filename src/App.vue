@@ -1,8 +1,14 @@
 <template>
   <div id="app">
-    <nav>
+    <nav class="nav-extended">
       <div class="nav-wrapper">
-        <router-link class="brand-logo center" to="/">Alelotório</router-link>
+        <span class="brand-logo center" to="/">Alelotório</span>
+      </div>
+      <div class="nav-content">
+        <ul class="tabs tabs-transparent row">
+          <li class="tab col s6"><router-link to="/">Comparação</router-link></li>
+          <li class="tab col s6"><router-link to="/multiple">Repetição</router-link></li>
+        </ul>
       </div>
     </nav>
 
@@ -13,4 +19,10 @@
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://use.fontawesome.com/releases/v5.5.0/css/all.css');
+
+.tabs.tabs-transparent .tab a.router-link-active.router-link-exact-active{
+  color: #fff;
+  border-bottom-style: solid;
+}
 </style>
