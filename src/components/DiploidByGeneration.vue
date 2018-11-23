@@ -9,9 +9,9 @@
             <th>A2A2</th>
         </tr>
         <tr>
-            <th><i class="fas fa-fish fa-2x fa-flip-horizontal a1a1"></i></th>
-            <th><i class="fas fa-fish fa-2x fa-flip-horizontal both"></i></th>
-            <th><i class="fas fa-fish fa-2x fa-flip-horizontal a2a2"></i></th>
+            <th><i class="fas fa-fish fa-2x a1a1"></i></th>
+            <th><i class="fas fa-fish fa-2x both"></i></th>
+            <th><i class="fas fa-fish fa-2x a2a2"></i></th>
         </tr>
       </thead>
       <tbody>
@@ -22,10 +22,6 @@
         </tr>
       </tbody>
     </table>
-
-    <h6><b>Geração {{Number(generation)+1}}</b></h6>
-    <input type="range" min="0" :max="population.diploidData.length - 1" v-model="generation"/>
-
     <div class="row">
       <div class="col s6 offset-s3">
         <pie-chart
@@ -34,6 +30,10 @@
           :colors="[a2Color || '#607d8b',bothColor || '#90a4ae', a1Color || '#cfd8dc']"
           :donut="true" />
       </div>
+    </div>
+    <div class="col s12 blue-grey lighten-5">
+      <h6><b>Geração {{Number(generation)+1}}</b></h6>
+      <input type="range" min="0" :max="population.diploidData.length - 1" v-model="generation"/>
     </div>
   </div>
 </template>
