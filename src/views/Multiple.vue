@@ -81,7 +81,7 @@
       <div class="col s12 l4 vertical-margin" v-show="!loading">
         <pie-chart
           :data="allelesData"
-          :colors="[config.colors.diploids.a2a2, config.colors.diploids.both, config.colors.diploids.a1a1]"
+          :colors="[config.colors.alleles.a2, config.colors.alleles.both, config.colors.alleles.a1]"
           :donut="true" />
       </div>
     </div>
@@ -111,6 +111,7 @@ import { Component, Vue } from 'vue-property-decorator';
           alleles: {
             a1: '#f48fb1',
             a2: '#9fa8da',
+            both: '#ce93d8',
           },
           diploids: {
             a1a1: '#ffe082',
@@ -211,9 +212,9 @@ import { Component, Vue } from 'vue-property-decorator';
       // data bind
       const population: any = that.population;
       return [
-        ['A2A2', population.alleles.a2],
-        ['A1A2 ou A2A1', population.alleles.a],
-        ['A1A1', population.alleles.a1],
+        ['A2', population.alleles.a2],
+        ['Não fixado', population.alleles.a],
+        ['A1', population.alleles.a1],
       ];
     },
     generationsData(): any[] {

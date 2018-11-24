@@ -128,6 +128,7 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
           alleles: {
             a1: '#f48fb1',
             a2: '#9fa8da',
+            both: '#ce93d8',
           },
           diploids: {
             a1a1: '#ffe082',
