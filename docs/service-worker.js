@@ -11,10 +11,10 @@
  * See https://goo.gl/2aRDsh
  */
 
-importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.1/workbox-sw.js");
+importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/alelotorio/precache-manifest.fa6ae93077b1a9dae27c529f556872ee.js"
+  "/alelotorio/precache-manifest.568fa58bc209a8b85256d8fd0164a730.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "alelotorio"});
