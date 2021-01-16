@@ -47,7 +47,7 @@
         <button
           class="waves-effect waves-light btn"
           @click="beforeGenerate" >
-          Gerar Gráficos
+          Iniciar simulação
         </button>
       </div>
 

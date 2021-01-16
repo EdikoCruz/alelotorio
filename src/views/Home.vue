@@ -16,6 +16,8 @@
       </div>
     </form>
 
+    {{ populations }}
+
     <div class="divider"></div>
     <table class="striped centered vertical-margin">
       <thead>
@@ -39,7 +41,7 @@
       <tfoot>
         <tr>
           <td class="center-align" colspan="3">
-            <button class="waves-effect waves-light btn" @click="generateOffspring">Gerar Gráficos</button>
+            <button class="waves-effect waves-light btn" @click="generateOffspring">Iniciar simulação</button>
           </td>
         </tr>
       </tfoot>
@@ -203,7 +205,7 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
         let a2 = population.size;
         const total = population.size * 2;
         const size = population.size;
-        const diploidData = [{a1a1: total / 4, a2a2: total / 4, both: total / 2}];
+        const diploidData = [{a1a1: size / 4, a2a2: size / 4, both: size / 2}];
         const histogramDataA1: any = {name: `${population.name} A1`, data: {1: 50}};
         const histogramDataA2: any = {name: `${population.name} A2`, data: {1: 50}};
 
@@ -280,9 +282,9 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
     that.population.size = 20;
     that.addPopulation();
 
-    that.population.name = 'Pet shop';
-    that.population.size = 80;
-    that.addPopulation();
+    // that.population.name = 'Pet shop';
+    // that.population.size = 80;
+    // that.addPopulation();
 
     that.population.name = 'Distribuidor';
     that.population.size = 200;
