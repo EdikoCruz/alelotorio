@@ -16,8 +16,6 @@
       </div>
     </form>
 
-    {{ populations }}
-
     <div class="divider"></div>
     <table class="striped centered vertical-margin">
       <thead>
