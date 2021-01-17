@@ -123,7 +123,7 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
         histogramMultiplicity: 10,
         minSize: 4,
         maxSize: 1000,
-        step: 4,
+        step: 1,
         colors: {
           alleles: {
             a1: '#f48fb1',
@@ -203,7 +203,8 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
         let a2 = population.size;
         const total = population.size * 2;
         const size = population.size;
-        const diploidData = [{a1a1: size / 4, a2a2: size / 4, both: size / 2}];
+        const initialSize = Math.floor(size / 4);
+        const diploidData = [{a1a1: initialSize, a2a2: initialSize, both: size - (initialSize * 2)}];
         const histogramDataA1: any = {name: `${population.name} A1`, data: {1: 50}};
         const histogramDataA2: any = {name: `${population.name} A2`, data: {1: 50}};
 
