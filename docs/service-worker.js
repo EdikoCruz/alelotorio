@@ -14,10 +14,10 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/alelotorio/precache-manifest.e7a450e4b282cf52ff7c39f7b8857080.js"
+  "/alelotorio/precache-manifest.29a4d235e721828dbbdf0198dbc29710.js"
 );
 
-workbox.core.setCacheNameDetails({prefix: "alelotorio"});
+workbox.core.setCacheNameDetails({prefix: "alelotorio-29a4d235e721828dbbdf0198dbc29710"});
 
 /**
  * The workboxSW.precacheAndRoute() method efficiently caches and responds to

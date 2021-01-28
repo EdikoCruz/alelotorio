@@ -97,10 +97,10 @@ import { Component, Vue } from 'vue-property-decorator';
   data() {
     return {
       loading: false,
-      repetitions: 200,
+      repetitions: 300,
       factor: 50,
       config: {
-        maxNumberOfGenerations: 5000,
+        maxNumberOfGenerations: 2550,
         maxNumberOfRepetions: 500,
         minNumberOfRepetions: 100,
         stepNumberOfRepetions: 50,
@@ -122,7 +122,7 @@ import { Component, Vue } from 'vue-property-decorator';
       },
       population: {
         name: 'Aquários',
-        size: 200,
+        size: 250,
         lastRun: false,
         alleles: {
           a1: 0,
