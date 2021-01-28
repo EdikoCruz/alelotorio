@@ -35,7 +35,7 @@
               <input
                 type="range"
                 :min="100"
-                :max="10000"
+                :max="5000"
                 :step="50"
                 v-model="config.maxNumberOfGenerations"/>
             </div>
