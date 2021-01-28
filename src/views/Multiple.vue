@@ -35,7 +35,7 @@
               <input
                 type="range"
                 :min="100"
-                :max="5000"
+                :max="10000"
                 :step="50"
                 v-model="config.maxNumberOfGenerations"/>
             </div>
@@ -100,12 +100,12 @@ import { Component, Vue } from 'vue-property-decorator';
       repetitions: 300,
       factor: 50,
       config: {
-        maxNumberOfGenerations: 2550,
-        maxNumberOfRepetions: 500,
+        maxNumberOfGenerations: 2300,
+        maxNumberOfRepetions: 1000,
         minNumberOfRepetions: 100,
         stepNumberOfRepetions: 50,
         minSize: 20,
-        maxSize: 500,
+        maxSize: 1000,
         step: 20,
         colors: {
           alleles: {
@@ -122,7 +122,7 @@ import { Component, Vue } from 'vue-property-decorator';
       },
       population: {
         name: 'Aquários',
-        size: 250,
+        size: 240,
         lastRun: false,
         alleles: {
           a1: 0,
