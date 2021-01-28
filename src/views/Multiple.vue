@@ -73,7 +73,7 @@
         <h6 class="center-align"><b>Agrupar por: {{factor}}</b></h6>
         <input
           type="range"
-          :min="1"
+          :min="Math.ceil((population.lastRun || population.size) / 8)"
           :max="Math.ceil((population.lastRun || population.size) / 2)"
           :step="1"
           v-model="factor"/>
@@ -101,11 +101,11 @@ import { Component, Vue } from 'vue-property-decorator';
       factor: 50,
       config: {
         maxNumberOfGenerations: 5000,
-        maxNumberOfRepetions: 1000,
+        maxNumberOfRepetions: 500,
         minNumberOfRepetions: 100,
         stepNumberOfRepetions: 50,
         minSize: 20,
-        maxSize: 1000,
+        maxSize: 500,
         step: 20,
         colors: {
           alleles: {

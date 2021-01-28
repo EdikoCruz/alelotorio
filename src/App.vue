@@ -7,7 +7,7 @@
       <div class="nav-content">
         <ul class="tabs tabs-transparent row">
           <li class="tab col s6"><router-link to="/">Comparação</router-link></li>
-          <li class="tab col s6"><router-link to="/multiple">Repetição</router-link></li>
+          <li class="tab col s6"><router-link to="/repeticao">Repetição</router-link></li>
         </ul>
       </div>
     </nav>

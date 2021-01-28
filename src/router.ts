@@ -5,7 +5,6 @@ import Home from './views/Home.vue';
 Vue.use(Router);
 
 export default new Router({
-  mode: 'history',
   base: process.env.BASE_URL,
   routes: [
     {
@@ -14,8 +13,8 @@ export default new Router({
       component: Home,
     },
     {
-      path: '/multiple',
-      name: 'multiple',
+      path: '/repeticao',
+      name: 'repeticao',
       component: () => import(/* webpackChunkName: "about" */ './views/Multiple.vue'),
     },
   ],
