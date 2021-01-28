@@ -14,22 +14,16 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/alelotorio/precache-manifest.33fe6125c499bc5293ea83f58e39ba95.js"
+  "/alelotorio/precache-manifest.e635e34f1f7fe14d8d4cc2a50e63f113.js"
 );
-caches.keys().then(function(names) {
-  for (let name of names) {
-    caches.delete(name);
-  }
-  console.log('cache deleted!');
 
-  workbox.core.setCacheNameDetails({prefix: "alelotorio"});
+workbox.core.setCacheNameDetails({prefix: "alelotorio"});
 
-  /**
-   * The workboxSW.precacheAndRoute() method efficiently caches and responds to
-   * requests for URLs in the manifest.
-   * See https://goo.gl/S9QRab
-   */
-  self.__precacheManifest = [].concat(self.__precacheManifest || []);
-  workbox.precaching.suppressWarnings();
-  workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
-});
+/**
+ * The workboxSW.precacheAndRoute() method efficiently caches and responds to
+ * requests for URLs in the manifest.
+ * See https://goo.gl/S9QRab
+ */
+self.__precacheManifest = [].concat(self.__precacheManifest || []);
+workbox.precaching.suppressWarnings();
+workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
