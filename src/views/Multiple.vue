@@ -73,7 +73,7 @@
         <h6 class="center-align"><b>Agrupar por: {{factor}}</b></h6>
         <input
           type="range"
-          :min="Math.ceil((population.lastRun || population.size) / 8)"
+          :min="1"
           :max="Math.ceil((population.lastRun || population.size) / 2)"
           :step="1"
           v-model="factor"/>
@@ -104,7 +104,7 @@ import { Component, Vue } from 'vue-property-decorator';
         maxNumberOfRepetions: 1000,
         minNumberOfRepetions: 100,
         stepNumberOfRepetions: 50,
-        minSize: 40,
+        minSize: 20,
         maxSize: 1000,
         step: 20,
         colors: {

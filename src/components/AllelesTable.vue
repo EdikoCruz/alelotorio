@@ -15,7 +15,7 @@
               color: p.allele === 'A1' ? (a1Color || '#cfd8dc') : (a2Color || '#607d8b'),
               fontWeight: 'bold' }">
               {{p.allele || '-'}}</td>
-          <td>{{p.generation || '-'}}</td>
+          <td>{{p.generation - 1 || '-'}}</td>
         </tr>
       </tbody>
     </table>

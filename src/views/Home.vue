@@ -277,17 +277,17 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
 
     that.createPopulationForm(); // to add attributes
 
-    that.population.name = 'Aquário';
-    that.population.size = 20;
-    that.addPopulation();
+    // that.population.name = 'Aquário';
+    // that.population.size = 20;
+    // that.addPopulation();
 
     // that.population.name = 'Pet shop';
     // that.population.size = 80;
     // that.addPopulation();
 
-    that.population.name = 'Distribuidor';
-    that.population.size = 200;
-    that.addPopulation();
+    // that.population.name = 'Distribuidor';
+    // that.population.size = 200;
+    // that.addPopulation();
   },
 })
 export default class Home extends Vue {}
