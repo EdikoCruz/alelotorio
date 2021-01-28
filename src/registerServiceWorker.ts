@@ -1,6 +1,9 @@
 /* tslint:disable:no-console */
 
 import { register } from 'register-service-worker';
+import { version } from 'vue/types/umd';
+
+const VERSION = 1;
 
 if (process.env.NODE_ENV === 'production') {
   register(`${process.env.BASE_URL}service-worker.js`, {
@@ -9,17 +12,24 @@ if (process.env.NODE_ENV === 'production') {
         'App is being served from cache by a service worker.\n' +
         'For more details, visit https://goo.gl/AFskqB',
       );
-      caches.keys().then(function(names) {
-        for (let name of names) {
-          caches.delete(name);
-        }
-      });
-      console.log('cache deleted!')
+      if ((!localStorage.getItem('version')) || Number(localStorage.getItem('version')) < Number(VERSION)) {
+        caches.keys().then(function(names) {
+          for (let name of names) {
+            caches.delete(name);
+          }
+        });
+        console.log('cache deleted!')
+      }
     },
     cached() {
       console.log('Content has been cached for offline use.');
     },
     updated() {
+      if ((!localStorage.getItem('version')) || Number(localStorage.getItem('version')) < VERSION) {
+        localStorage.setItem('version', String(VERSION));
+        location.reload();
+        console.log('New version added!'); 
+      }
       console.log('New content is available; please refresh.');
     },
     offline() {
