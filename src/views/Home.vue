@@ -3,35 +3,16 @@
     <AddPopulation @add="addPopulation"/>
 
     <div class="divider"></div>
-    <table class="striped centered vertical-margin">
-      <thead>
-        <tr>
-            <th>Nome</th>
-            <th>Tamanho</th>
-            <th>Remover</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(p, i) in populations" :key="i">
-          <td>{{p.name}}</td>
-          <td>{{p.size}}</td>
-          <td>
-            <button class="waves-effect waves-light btn" @click="removePopulation(i)">
-              <i class="material-icons center">delete</i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td class="center-align" colspan="3">
-            <button class="waves-effect waves-light btn" @click="generateOffspring">Iniciar simulação</button>
-          </td>
-        </tr>
-      </tfoot>
-    </table>
 
-    <div class="row">
+    <PopulationsTable
+      :populations="populations"
+      @remove="removePopulation"
+      @start="generateOffspring"
+    />
+
+    <div class="divider"></div>
+
+    <div class="row vertical-padding">
       <ul class="col s12 tabs teal lighten-5">
         <li class="tab">
           <a
@@ -44,15 +25,14 @@
             @click="tabs.show = i">{{p.name}}</a>
         </li>
       </ul>
-    </div>
 
-    <div class="row vertical-margin" v-show="tabs.show === -1">
       <alleles-histogram
         class="col s12 vertical-margin"
-        :populations="populations"
-        :a1-color="config.colors.alleles.a1"
-        :a2-color="config.colors.alleles.a2" />
-      <div class="col s12">
+        :populations="tabs.show === -1 ? populations : null"
+        :population="tabs.show === -1 ? null : populations[tabs.show]"
+      />
+
+      <div class="col s12" v-if="tabs.show === -1">
         <alleles-table
         class="col s12 l8"
         :a1-color="config.colors.alleles.a1"
@@ -64,41 +44,38 @@
           :a1-color="config.colors.alleles.a1"
           :a2-color="config.colors.alleles.a2" />
       </div>
-    </div>
 
-    <div class="row vertical-margin" v-for="(population, i) in populations" :key="i" v-show="tabs.show === i">
-      <alleles-histogram
-        class="col s12"
-        :partialName="true"
-        :population="population"
-        :a1-color="config.colors.alleles.a1"
-        :a2-color="config.colors.alleles.a2" />
-      <diploid-by-generation
+      <diploid-by-generation v-for="(population, i) in populations" :key="i" v-if="tabs.show === i"
         class="col s12"
         :population="population"
         :a1-color="config.colors.diploids.a1a1"
         :both-color="config.colors.diploids.both"
-        :a2-color="config.colors.diploids.a2a2" />
+        :a2-color="config.colors.diploids.a2a2"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+
+import AddPopulation from '@/components/form/AddPopulation.vue';
+import PopulationsTable from '@/components/populations/PopulationsTable.vue';
+
 import AllelesDonut from '@/components/AllelesDonut.vue';
 import AllelesHistogram from '@/components/AllelesHistogram.vue';
 import AllelesTable from '@/components/AllelesTable.vue';
 import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
-import AddPopulation from '@/components/form/AddPopulation.vue';
 
 
 @Component({
   components: {
+    AddPopulation,
+    PopulationsTable,
     AllelesDonut,
     AllelesHistogram,
     AllelesTable,
     DiploidByGeneration,
-    AddPopulation,
   },
 
   data() {
@@ -238,6 +215,7 @@ export default class Home extends Vue {}
 .vertical-margin{
   margin: 30px 0;
 }
+
 .tabs .tab a {
   font-weight: bold;
 }
