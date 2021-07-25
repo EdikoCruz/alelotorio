@@ -9,9 +9,9 @@
             <th>A2A2</th>
         </tr>
         <tr>
-            <th><i class="fas fa-fish fa-2x a1a1"></i></th>
-            <th><i class="fas fa-fish fa-2x both"></i></th>
-            <th><i class="fas fa-fish fa-2x a2a2"></i></th>
+            <th><i class="fas fa-fish fa-2x" :style="{color: population.colorA1A1}"></i></th>
+            <th><i class="fas fa-fish fa-2x"  :style="{color: population.colorBoth}"></i></th>
+            <th><i class="fas fa-fish fa-2x" :style="{color: population.colorA2A2}"></i></th>
         </tr>
       </thead>
       <tbody>
@@ -27,7 +27,7 @@
         <pie-chart
           :data="data"
           :legend="false"
-          :colors="[a2Color || '#607d8b',bothColor || '#90a4ae', a1Color || '#cfd8dc']"
+          :colors="[population.colorA2A2, population.colorBoth, population.colorA1A1]"
           :donut="true" />
       </div>
     </div>
@@ -64,20 +64,8 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 })
 export default class DiploidByGeneration extends Vue {
   @Prop() private population!: any;
-  @Prop() private a1Color!: string;
-  @Prop() private a2Color!: string;
-  @Prop() private bothColor!: string;
 }
 </script>
 
 <style scoped lang="scss">
-.a1a1 {
-  color: #ffe082;
-}
-.a2a2 {
-  color: #bf360c;
-}
-.both {
-  color: #ff9100;
-}
 </style>

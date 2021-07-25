@@ -22,10 +22,10 @@
         </div>
         <div class="switch col s12 l6" v-if="showOptions">
           <label>
-            Mostar diploides
+            Mostar como diploides
             <input type="checkbox" @change="updateLabels" v-model="showAsAlleles">
             <span class="lever"></span>
-            Mostar alelos
+            Mostar como alelos
           </label>
         </div>
       </div>
@@ -171,12 +171,21 @@ import population from '@/interfaces/population.ts';
       const percentageAmountA1A1 = that.getPercentageAmountA1A1();
       const percentageAmountA2A2 = that.getPercentageAmountA2A2();
 
-      that.amountA1 = Math.floor(value * percentageAmountA1);
-      that.amountA2 = value - that.amountA1;
+      if (that.showAsAlleles) {
+        that.amountA1 = Math.ceil((value * 2) * percentageAmountA1) ;
+        that.amountA2 = (value * 2) - that.amountA1;
 
-      that.amountA1A1 = Math.floor(value * percentageAmountA1A1);
-      that.amountA2A2 = Math.floor(value * percentageAmountA2A2);
-      that.amountBoth = value - that.amountA1A1 - that.amountA2A2;
+        that.amountBoth = Math.ceil(Math.min(that.amountA1, that.amountA2)/2);
+        that.amountA1A1 = Math.floor((that.amountA1 - that.amountBoth)/2);
+        that.amountA2A2 = Math.floor((that.amountA2 - that.amountBoth)/2);
+      } else {
+        that.amountA1A1 = Math.floor(value * percentageAmountA1A1);
+        that.amountA2A2 = Math.floor(value * percentageAmountA2A2);
+        that.amountBoth = value - that.amountA1A1 - that.amountA2A2;
+
+        that.amountA1 = that.amountBoth + (that.amountA1A1 * 2);
+        that.amountA2 = that.amountBoth + (that.amountA2A2 * 2);
+      }
 
       that.updateLabels();
     },
@@ -188,7 +197,7 @@ import population from '@/interfaces/population.ts';
       that.amountA1 = value;
       that.size = value + Number(that.amountA2);
 
-      Vue.nextTick(() => that.onSizeChange(that.size));
+      Vue.nextTick(() => that.onSizeChange(Math.floor(that.size/2)));
     },
     onAmountA2Change(event) {
       const that: any = this;
@@ -198,7 +207,7 @@ import population from '@/interfaces/population.ts';
       that.amountA2 = value;
       that.size = value + Number(that.amountA1);
 
-      Vue.nextTick(() => that.onSizeChange(that.size));
+      Vue.nextTick(() => that.onSizeChange(Math.floor(that.size/2)));
     },
     onamountA1A1Change(event) {
       const that: any = this;

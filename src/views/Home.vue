@@ -137,14 +137,18 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
       const histogramMultiplicity: number = that.config.histogramMultiplicity;
 
       populations.forEach((population: any) => {
-        let a1 = population.size;
-        let a2 = population.size;
+        let a1 = population.amountA1;
+        let a2 = population.amountA2;
+
         const total = population.size * 2;
         const size = population.size;
-        const initialSize = Math.floor(size / 4);
-        const diploidData = [{a1a1: initialSize, a2a2: initialSize, both: size - (initialSize * 2)}];
-        const histogramDataA1: any = {name: `${population.name} A1`, data: {1: 50}};
-        const histogramDataA2: any = {name: `${population.name} A2`, data: {1: 50}};
+        const diploidData = [{
+          a1a1: population.amountA1A1,
+          a2a2: population.amountA2A2,
+          both: population.amountBoth
+        }];
+        const histogramDataA1: any = {data: {1: (a1 / (a1 + a2)) * 100}};
+        const histogramDataA2: any = {data: {1: (a2 / (a1 + a2)) * 100}};
 
         let generation = 2;
         while (generation <= maxNumberOfGenerations && a1 !== total && a2 !== total) {
