@@ -7,18 +7,18 @@ const VERSION = 1;
 
 if (process.env.NODE_ENV === 'production') {
   register(`${process.env.BASE_URL}service-worker.js`, {
-    ready() {      
+    ready() {
       console.log(
         'App is being served from cache by a service worker.\n' +
         'For more details, visit https://goo.gl/AFskqB',
       );
       if ((!localStorage.getItem('version')) || Number(localStorage.getItem('version')) < Number(VERSION)) {
-        caches.keys().then(function(names) {
-          for (let name of names) {
+        caches.keys().then((names) => {
+          for (const name of names) {
             caches.delete(name);
           }
         });
-        console.log('cache deleted!')
+        console.log('cache deleted!');
       }
     },
     cached() {
@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === 'production') {
       if ((!localStorage.getItem('version')) || Number(localStorage.getItem('version')) < VERSION) {
         localStorage.setItem('version', String(VERSION));
         location.reload();
-        console.log('New version added!'); 
+        console.log('New version added!');
       }
       console.log('New content is available; please refresh.');
     },

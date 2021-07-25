@@ -1,20 +1,6 @@
 <template>
   <div class="home container">
-    <form class="col s12 vertical-margin" @submit.prevent>
-      <div class="row">
-        <div class="input-field col s12 l5">
-          <input id="population-name" type="text" v-model="population.name">
-          <label for="population-name">Nome</label>
-        </div>
-        <div class="input-field col s12 l5">
-          <input id="population-size" type="number" v-model="population.size" :min="config.minSize" :max="config.maxSize" :step="config.step">
-          <label for="population-size">Tamanho</label>
-        </div>
-        <div class="input-field col s12 l2 center-align">
-          <button class="waves-effect waves-light btn" @click="addPopulation">Adicionar</button>
-        </div>
-      </div>
-    </form>
+    <AddPopulation @add="addPopulation"/>
 
     <div class="divider"></div>
     <table class="striped centered vertical-margin">
@@ -103,6 +89,7 @@ import AllelesDonut from '@/components/AllelesDonut.vue';
 import AllelesHistogram from '@/components/AllelesHistogram.vue';
 import AllelesTable from '@/components/AllelesTable.vue';
 import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
+import AddPopulation from '@/components/form/AddPopulation.vue';
 
 
 @Component({
@@ -111,6 +98,7 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
     AllelesHistogram,
     AllelesTable,
     DiploidByGeneration,
+    AddPopulation,
   },
 
   data() {
@@ -143,9 +131,9 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
   },
 
   methods: {
-    createPopulationForm(): void {
-      const that: any = this; // tslinter's data attributes bug
-      that.population = {
+    addPopulation(population: string): void {
+      const that: any = this;
+      const emptyPopulation: any = {
         // population attributes
         name: '',
         size: '',
@@ -157,35 +145,8 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
         histogramDataCleaned: {a1: {}, a2: {}},
         diploidData: [],
       };
-    },
-    addPopulation(): void {
-      // M is global
-      // @ts-ignore
-      const toast = M.toast;
 
-      const that: any = this;
-      // data bind
-      const population: any = that.population;
-      const populations: any = that.populations;
-      const minSize = that.config.minSize;
-      const maxSize = that.config.maxSize;
-      const step = that.config.step;
-      // population attributes
-      const size = Number(population.size);
-      const name = population.name;
-
-      if (! name) {
-        toast({html: 'O nome não pode estar em branco'});
-      } else if (size % step !== 0) {
-        toast({html: `O tamanho precisa ser múltiplo de ${step}`});
-      } else if (size < minSize) {
-        toast({html: `O tamanho não pode ser menor ${minSize}`});
-      } else if (size > maxSize) {
-        toast({html: `O tamanho não pode ser maior ${maxSize}`});
-      } else {
-        populations.push(population);
-        that.createPopulationForm();
-      }
+      that.populations.push(Object.assign({}, emptyPopulation, population));
     },
     removePopulation(index): void {
       const that: any = this;
@@ -268,26 +229,6 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
         population.diploidData = diploidData;
       });
     },
-  },
-
-  computed: {},
-
-  mounted() {
-    const that: any = this;
-
-    that.createPopulationForm(); // to add attributes
-
-    // that.population.name = 'Aquário';
-    // that.population.size = 20;
-    // that.addPopulation();
-
-    // that.population.name = 'Pet shop';
-    // that.population.size = 80;
-    // that.addPopulation();
-
-    // that.population.name = 'Distribuidor';
-    // that.population.size = 200;
-    // that.addPopulation();
   },
 })
 export default class Home extends Vue {}
