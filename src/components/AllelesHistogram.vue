@@ -24,7 +24,7 @@
       :legend="false"
       height="200px"
       xtitle="Geração"
-      ytitle="Alelo %" />
+      ytitle="Frequência alélica" />
   </div>
 </template>
 

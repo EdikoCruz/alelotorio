@@ -66,8 +66,11 @@
       </div>
 
       <div class="col s12 l8 vertical-margin" v-show="!loading">
+        <div style="color: #242424; padding: 5px; text-align: center; width: 100%; font-size: 1.5rem">
+          Número de eventos de fixação por geração
+        </div>
         <column-chart
-          ytitle="Fixações"
+          ytitle="Número de eventos de fixação"
           xtitle="Geração"
           :data="generationsData" />
         <h6 class="center-align"><b>Agrupar por: {{factor}}</b></h6>
@@ -79,7 +82,11 @@
           v-model="factor"/>
       </div>
       <div class="col s12 l4 vertical-margin" v-show="!loading">
+        <div style="color: #242424; padding: 5px; text-align: center; width: 100%; font-size: 1.5rem">
+          Número de vezes em que cada alelo foi fixado
+        </div>
         <pie-chart
+          legend="bottom"
           :data="allelesData"
           :colors="[config.colors.alleles.a2, config.colors.alleles.both, config.colors.alleles.a1]"
           :donut="true" />
@@ -212,9 +219,9 @@ import { Component, Vue } from 'vue-property-decorator';
       // data bind
       const population: any = that.population;
       return [
-        ['A2', population.alleles.a2],
-        ['Não fixado', population.alleles.a],
         ['A1', population.alleles.a1],
+        ['Não fixado', population.alleles.a],
+        ['A2', population.alleles.a2],
       ];
     },
     generationsData(): any[] {

@@ -26,6 +26,9 @@
         </li>
       </ul>
 
+      <div style="color: #242424; padding: 5px; text-align: center; width: 100%; font-size: 1.5rem">
+        Frequências alélicas ao longo das gerações
+      </div>
       <alleles-histogram
         class="col s12 vertical-margin"
         :populations="tabs.show === -1 ? populations : null"
@@ -100,6 +103,16 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
             a2a2: '#bf360c',
             both: '#ff9100',
           },
+          // alleles: {
+          //   a1: '#6b6b6b',
+          //   a2: '#484848',
+          //   both: '#242424',
+          // },
+          // diploids: {
+          //   a1a1: '#6b6b6b',
+          //   a2a2: '#484848',
+          //   both: '#242424',
+          // },
         },
       },
       population: {},
@@ -145,10 +158,10 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
         const diploidData = [{
           a1a1: population.amountA1A1,
           a2a2: population.amountA2A2,
-          both: population.amountBoth
+          both: population.amountBoth,
         }];
-        const histogramDataA1: any = {data: {1: (a1 / (a1 + a2)) * 100}};
-        const histogramDataA2: any = {data: {1: (a2 / (a1 + a2)) * 100}};
+        const histogramDataA1: any = {data: {1: (a1 / (a1 + a2))}};
+        const histogramDataA2: any = {data: {1: (a2 / (a1 + a2))}};
 
         let generation = 2;
         while (generation <= maxNumberOfGenerations && a1 !== total && a2 !== total) {
@@ -176,8 +189,8 @@ import DiploidByGeneration from '@/components/DiploidByGeneration.vue';
           diploidData.push(diploid);
           a1 = a1Counter;
           a2 = a2Counter;
-          histogramDataA1.data[generation] = (a1 / total) * 100;
-          histogramDataA2.data[generation] = (a2 / total) * 100;
+          histogramDataA1.data[generation] = (a1 / total);
+          histogramDataA2.data[generation] = (a2 / total);
           generation += 1;
         }
 

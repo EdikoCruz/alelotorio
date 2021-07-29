@@ -7,6 +7,7 @@ import VueChartkick from 'vue-chartkick';
 // @ts-ignore
 import Chart from 'chart.js';
 Chart.defaults.global.elements.point.radius = 0;
+Chart.defaults.global.legend.reverse = true;
 
 Vue.use(VueChartkick, {adapter: Chart});
 

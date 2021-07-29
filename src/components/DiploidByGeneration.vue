@@ -5,7 +5,7 @@
       <thead>
         <tr>
             <th>A1A1</th>
-            <th>A1A2 ou A2A1</th>
+            <th>A1A2</th>
             <th>A2A2</th>
         </tr>
         <tr>
@@ -26,7 +26,7 @@
       <div class="col s6 offset-s3">
         <pie-chart
           :data="data"
-          :legend="false"
+          legend="bottom"
           :colors="[population.colorA2A2, population.colorBoth, population.colorA1A1]"
           :donut="true" />
       </div>
@@ -56,7 +56,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
       return [
         ['A2A2', population.diploidData.length > 0 ? population.diploidData[generation].a2a2 : '-'],
-        ['A1A2 ou A2A1', population.diploidData.length > 0 ? population.diploidData[generation].both : '-'],
+        ['A1A2', population.diploidData.length > 0 ? population.diploidData[generation].both : '-'],
         ['A1A1', population.diploidData.length > 0 ? population.diploidData[generation].a1a1 : '-'],
       ];
     },

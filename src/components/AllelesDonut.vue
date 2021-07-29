@@ -2,7 +2,7 @@
   <div class="alleles-donut">
     <pie-chart
       height="200px"
-      :legend="false"
+      legend="bottom"
       :data="data"
       :colors="[a2Color, a1Color]"
       :donut="true" />
