@@ -8,12 +8,12 @@ self.__precacheManifest = [
     "url": "/alelotorio/js/about.dd8eb7ac.js"
   },
   {
-    "revision": "a5177dd041b39d0f91e0",
-    "url": "/alelotorio/css/app.8e6df470.css"
+    "revision": "20515937f6054098d69b",
+    "url": "/alelotorio/css/app.1a419d37.css"
   },
   {
-    "revision": "a5177dd041b39d0f91e0",
-    "url": "/alelotorio/js/app.ebf5fddd.js"
+    "revision": "20515937f6054098d69b",
+    "url": "/alelotorio/js/app.8bfc4f96.js"
   },
   {
     "revision": "2f5649b11c03a3d918c8",
@@ -24,7 +24,7 @@ self.__precacheManifest = [
     "url": "/alelotorio/js/chunk-vendors.f69a00f8.js"
   },
   {
-    "revision": "3214b7cc2dc612093dc059f1dd5840d6",
+    "revision": "513f7a7ba4af3a98b64fd917a4bac712",
     "url": "/alelotorio/index.html"
   },
   {

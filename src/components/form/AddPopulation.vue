@@ -163,6 +163,10 @@ const shade = 25;
       // return amountA1 / computedsize;
       return Number(that.frequencyA1.replace(',', '.'));
     },
+    getPercentageAmountA2() {
+      const that: any = this;
+      return Number(that.frequencyA2.replace(',', '.'));
+    },
     getPercentageAmountA1A1() {
       const that: any = this;
       // const amountA1A1 = Number(that.amountA1A1);
@@ -203,24 +207,14 @@ const shade = 25;
       value = value < 0 ? 0 : value;
 
       const percentageAmountA1 = that.getPercentageAmountA1();
-      const percentageAmountA1A1 = that.getPercentageAmountA1A1();
-      const percentageAmountA2A2 = that.getPercentageAmountA2A2();
+      const percentageAmountA2 = that.getPercentageAmountA2();
 
-      const amountA1 = Math.ceil((value * 2) * percentageAmountA1) ;
-      const amountA2 = (value * 2) - amountA1;
+      const amountA1A1 = Math.floor(percentageAmountA1 * percentageAmountA1 * value);
+      const amountA2A2 = Math.floor(percentageAmountA2 * percentageAmountA2 * value);
+      const amountBoth = value - amountA1A1 - amountA2A2;
 
-      const amountBoth = Math.min(amountA1, amountA2);
-      const amountA1A1 = amountA1 - Math.floor(amountBoth / 2);
-      const amountA2A2 = amountA2 - Math.floor(amountBoth / 2);
-
-      // if (!that.showAsAlleles) {
-      //   amountA1A1 = Math.floor(value * percentageAmountA1A1);
-      //   amountA2A2 = Math.floor(value * percentageAmountA2A2);
-      //   amountBoth = value - amountA1A1 - amountA2A2;
-
-      //   amountA1 = amountBoth + (amountA1A1 * 2);
-      //   amountA2 = amountBoth + (amountA2A2 * 2);
-      // }
+      const amountA1 = amountA1A1 + amountA1A1 +  amountBoth;
+      const amountA2 = amountA2A2 + amountA2A2 +  amountBoth;
 
       Object.assign(that, {
         size: value,
