@@ -7,7 +7,7 @@
         </div>
 
         <div class="input-field col s12 l6">
-          <input id="population-size" @change="(event) => onSizeChange(Number(event.target.value))" type="text" v-model="size">
+          <input id="population-size" @change="(event) => onSizeChange(event.target.value)" type="text" v-model="size">
           <label for="population-size">Tamanho da população</label>
         </div>
       </div>
@@ -161,7 +161,7 @@ const shade = 25;
       //   return 0.5;
       // }
       // return amountA1 / computedsize;
-      return that.frequencyA1;
+      return Number(that.frequencyA1.replace(',', '.'));
     },
     getPercentageAmountA1A1() {
       const that: any = this;
@@ -173,7 +173,7 @@ const shade = 25;
       //   return 0.25;
       // }
       // return amountA1A1 / computedsize;
-      return that.frequencyA2;
+      return Number(that.frequencyA2.replace(',', '.'));
     },
     getPercentageAmountA2A2() {
       const that: any = this;
@@ -198,7 +198,10 @@ const shade = 25;
     },
     onSizeChange(value) {
       const that: any = this;
-      value = isNaN(value) || value < 0 ? 0 : value;
+      value = Number(value);
+      value = isNaN(value) ? 0 : value;
+      value = value < 0 ? 0 : value;
+
       const percentageAmountA1 = that.getPercentageAmountA1();
       const percentageAmountA1A1 = that.getPercentageAmountA1A1();
       const percentageAmountA2A2 = that.getPercentageAmountA2A2();
