@@ -8,26 +8,35 @@
 
         <div class="input-field col s12 l6">
           <input id="population-size" @change="(event) => onSizeChange(Number(event.target.value))" type="number" v-model="size" min="0">
-          <label for="population-size">Tamanho da population</label>
+          <label for="population-size">Tamanho da população</label>
         </div>
       </div>
 
-      <div class="row">
-        <div class="col s12 l6">
-          <label for="population-main-color" style="padding-right: 15px">Cor da população</label>
-          <input @change="onColorChange" id="population-main-color" type="color" v-model="mainColor" min="0">
-        </div>
 
-        <div class="switch col s12 l6" style="text-align: right">
-          <label>
-            Mostar como diploides
-            <input type="checkbox" @change="updateLabels" v-model="showAsAlleles">
-            <span class="lever"></span>
-            Mostar como alelos
-          </label>
+      <!--
+      <div class="switch col s12 l6" style="text-align: right">
+        <label>
+          Mostar como diploides
+          <input type="checkbox" @change="updateLabels" v-model="showAsAlleles">
+          <span class="lever"></span>
+          Mostar como alelos
+        </label>
+      </div>
+      -->
+
+      
+      <div class="row" v-if="showAsAlleles">
+        <div class="input-field col s12 l6">
+          <input id="population-amountA1" @change="onChangeFrequencyA1" type="number" v-model="frequencyA1" min="0" max="1" step="0.01">
+          <label for="population-amountA1">Frequência de A1</label>
+        </div>
+        <div class="input-field col s12 l6">
+          <input id="population-amountA2" @change="onChangeFrequencyA2" type="number" v-model="frequencyA2" min="0" max="1" step="0.01">
+          <label for="population-amountA2">Frequência de A2</label>
         </div>
       </div>
 
+      <!--
       <div class="row" v-if="showAsAlleles">
         <div class="input-field col s12 l6">
           <input id="population-amountA1" @change="onAmountA1Change" type="number" v-model="amountA1" min="0">
@@ -38,6 +47,7 @@
           <label for="population-amountA2">Frequência de A2</label>
         </div>
       </div>
+      -->
 
       <div class="row" v-if="!showAsAlleles">
         <div class="input-field col s12 l4">
@@ -51,6 +61,13 @@
         <div class="input-field col s12 l4">
           <input id="population-amountA2A2" @change="onAmountA2A2Change" type="number" v-model="amountA2A2" min="0">
           <label for="population-amountA2A2">Quantidade de A2A2</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col s12" style="text-align: right">
+          <label for="population-main-color" style="padding-right: 15px">Cor da população</label>
+          <input @change="onColorChange" id="population-main-color" type="color" v-model="mainColor" min="0">
         </div>
       </div>
 
@@ -93,6 +110,8 @@ const shade = 25;
       colorA1A1: shadeColor(colors[0][7], shade),
       colorA2A2: shadeColor(colors[0][7], -shade),
       colorBoth: colors[0][7],
+      frequencyA1: 0.5,
+      frequencyA2: 0.5,
     };
   },
   mounted() {
@@ -123,6 +142,8 @@ const shade = 25;
         colorA1A1: shadeColor(newMainColor, shade),
         colorA2A2: shadeColor(newMainColor, -shade),
         colorBoth: newMainColor,
+        frequencyA1: 0.5,
+        frequencyA2: 0.5,
       });
 
       Vue.nextTick(() => that.updateLabels());
@@ -133,24 +154,26 @@ const shade = 25;
     },
     getPercentageAmountA1() {
       const that: any = this;
-      const amountA1 = Number(that.amountA1);
-      const amountA2 = Number(that.amountA2);
-      const computedsize = amountA1 + amountA2;
-      if (that.isAlleleAmountPristine || computedsize === 0) {
-        return 0.5;
-      }
-      return amountA1 / computedsize;
+      // const amountA1 = Number(that.amountA1);
+      // const amountA2 = Number(that.amountA2);
+      // const computedsize = amountA1 + amountA2;
+      // if (that.isAlleleAmountPristine || computedsize === 0) {
+      //   return 0.5;
+      // }
+      // return amountA1 / computedsize;
+      return that.frequencyA1;
     },
     getPercentageAmountA1A1() {
       const that: any = this;
-      const amountA1A1 = Number(that.amountA1A1);
-      const amountA2A2 = Number(that.amountA2A2);
-      const amountBoth = Number(that.amountBoth);
-      const computedsize = amountA1A1 + amountA2A2 + amountBoth;
-      if (that.isDiploidAmountPristine || computedsize === 0) {
-        return 0.25;
-      }
-      return amountA1A1 / computedsize;
+      // const amountA1A1 = Number(that.amountA1A1);
+      // const amountA2A2 = Number(that.amountA2A2);
+      // const amountBoth = Number(that.amountBoth);
+      // const computedsize = amountA1A1 + amountA2A2 + amountBoth;
+      // if (that.isDiploidAmountPristine || computedsize === 0) {
+      //   return 0.25;
+      // }
+      // return amountA1A1 / computedsize;
+      return that.frequencyA2;
     },
     getPercentageAmountA2A2() {
       const that: any = this;
@@ -205,6 +228,34 @@ const shade = 25;
       });
 
       that.updateLabels();
+    },
+    onChangeFrequencyA1(event) {
+      const that: any = this;
+      const value = Number(event.target.value);
+      const frequencyA1 = parseFloat(String(value)).toPrecision(2);
+      // @ts-ignore
+      const frequencyA2 = parseFloat(String(1 - frequencyA1)).toPrecision(2);
+
+      Object.assign(that, {
+        frequencyA2,
+        frequencyA1,
+      });
+
+      Vue.nextTick(() => that.onSizeChange(that.size));
+    },
+    onChangeFrequencyA2(event) {
+      const that: any = this;
+      const value = Number(event.target.value);
+      const frequencyA2 = parseFloat(String(value)).toPrecision(2);
+      // @ts-ignore
+      const frequencyA1 = parseFloat(String(1 - frequencyA2)).toPrecision(2);
+
+      Object.assign(that, {
+        frequencyA2,
+        frequencyA1,
+      });
+
+      Vue.nextTick(() => that.onSizeChange(that.size));
     },
     onAmountA1Change(event) {
       // @ts-ignore
