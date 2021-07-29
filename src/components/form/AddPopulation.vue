@@ -7,7 +7,7 @@
         </div>
 
         <div class="input-field col s12 l6">
-          <input id="population-size" @change="(event) => onSizeChange(Number(event.target.value))" type="number" v-model="size" min="0">
+          <input id="population-size" @change="(event) => onSizeChange(Number(event.target.value))" type="text" v-model="size">
           <label for="population-size">Tamanho da população</label>
         </div>
       </div>
@@ -27,11 +27,11 @@
       
       <div class="row" v-if="showAsAlleles">
         <div class="input-field col s12 l6">
-          <input id="population-amountA1" @change="onChangeFrequencyA1" type="number" v-model="frequencyA1" min="0" max="1" step="0.01">
+          <input id="population-amountA1" @change="onChangeFrequencyA1" type="text" v-model="frequencyA1">
           <label for="population-amountA1">Frequência de A1</label>
         </div>
         <div class="input-field col s12 l6">
-          <input id="population-amountA2" @change="onChangeFrequencyA2" type="number" v-model="frequencyA2" min="0" max="1" step="0.01">
+          <input id="population-amountA2" @change="onChangeFrequencyA2" type="text" v-model="frequencyA2">
           <label for="population-amountA2">Frequência de A2</label>
         </div>
       </div>
@@ -110,8 +110,8 @@ const shade = 25;
       colorA1A1: shadeColor(colors[0][7], shade),
       colorA2A2: shadeColor(colors[0][7], -shade),
       colorBoth: colors[0][7],
-      frequencyA1: 0.5,
-      frequencyA2: 0.5,
+      frequencyA1: '0,50',
+      frequencyA2: '0,50',
     };
   },
   mounted() {
@@ -142,8 +142,8 @@ const shade = 25;
         colorA1A1: shadeColor(newMainColor, shade),
         colorA2A2: shadeColor(newMainColor, -shade),
         colorBoth: newMainColor,
-        frequencyA1: 0.5,
-        frequencyA2: 0.5,
+        frequencyA1: '0,50',
+        frequencyA2: '0,50',
       });
 
       Vue.nextTick(() => that.updateLabels());
@@ -198,25 +198,26 @@ const shade = 25;
     },
     onSizeChange(value) {
       const that: any = this;
+      value = isNaN(value) || value < 0 ? 0 : value;
       const percentageAmountA1 = that.getPercentageAmountA1();
       const percentageAmountA1A1 = that.getPercentageAmountA1A1();
       const percentageAmountA2A2 = that.getPercentageAmountA2A2();
 
-      let amountA1 = Math.ceil((value * 2) * percentageAmountA1) ;
-      let amountA2 = (value * 2) - amountA1;
+      const amountA1 = Math.ceil((value * 2) * percentageAmountA1) ;
+      const amountA2 = (value * 2) - amountA1;
 
-      let amountA1A1 = Math.floor(amountA1 / 2);
-      let amountA2A2 = Math.floor(amountA2 / 2);
-      let amountBoth = Math.ceil((value - amountA1A1 - amountA2A2) / 2);
+      const amountBoth = Math.min(amountA1, amountA2);
+      const amountA1A1 = amountA1 - Math.floor(amountBoth / 2);
+      const amountA2A2 = amountA2 - Math.floor(amountBoth / 2);
 
-      if (!that.showAsAlleles) {
-        amountA1A1 = Math.floor(value * percentageAmountA1A1);
-        amountA2A2 = Math.floor(value * percentageAmountA2A2);
-        amountBoth = value - amountA1A1 - amountA2A2;
+      // if (!that.showAsAlleles) {
+      //   amountA1A1 = Math.floor(value * percentageAmountA1A1);
+      //   amountA2A2 = Math.floor(value * percentageAmountA2A2);
+      //   amountBoth = value - amountA1A1 - amountA2A2;
 
-        amountA1 = amountBoth + (amountA1A1 * 2);
-        amountA2 = amountBoth + (amountA2A2 * 2);
-      }
+      //   amountA1 = amountBoth + (amountA1A1 * 2);
+      //   amountA2 = amountBoth + (amountA2A2 * 2);
+      // }
 
       Object.assign(that, {
         size: value,
@@ -231,10 +232,17 @@ const shade = 25;
     },
     onChangeFrequencyA1(event) {
       const that: any = this;
-      const value = Number(event.target.value);
-      const frequencyA1 = parseFloat(String(value)).toPrecision(2);
+      let value = Number(event.target.value.replace(',', '.'));
+      value = isNaN(value) ? 0.5 : value;
+      value = value > 1 ? 1 : value;
+      value = value < 0 ? 0 : value;
+
+      let frequencyA1 = parseFloat(String(value)).toPrecision(2);
       // @ts-ignore
-      const frequencyA2 = parseFloat(String(1 - frequencyA1)).toPrecision(2);
+      let frequencyA2 = parseFloat(String(1 - frequencyA1)).toPrecision(2);
+
+      frequencyA1 = String(frequencyA1).replace('.', ',');
+      frequencyA2 = String(frequencyA2).replace('.', ',');
 
       Object.assign(that, {
         frequencyA2,
@@ -244,11 +252,20 @@ const shade = 25;
       Vue.nextTick(() => that.onSizeChange(that.size));
     },
     onChangeFrequencyA2(event) {
+      Vue.nextTick(() => that.onSizeChange(that.size));
+
       const that: any = this;
-      const value = Number(event.target.value);
-      const frequencyA2 = parseFloat(String(value)).toPrecision(2);
+      let value = Number(event.target.value.replace(',', '.'));
+      value = isNaN(value) ? 0.5 : value;
+      value = value > 1 ? 1 : value;
+      value = value < 0 ? 0 : value;
+
+      let frequencyA2 = parseFloat(String(value)).toPrecision(2);
       // @ts-ignore
-      const frequencyA1 = parseFloat(String(1 - frequencyA2)).toPrecision(2);
+      let frequencyA1 = parseFloat(String(1 - frequencyA2)).toPrecision(2);
+
+      frequencyA1 = String(frequencyA1).replace('.', ',');
+      frequencyA2 = String(frequencyA2).replace('.', ',');
 
       Object.assign(that, {
         frequencyA2,

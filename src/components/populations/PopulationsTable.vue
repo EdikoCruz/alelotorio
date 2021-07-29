@@ -9,12 +9,12 @@
           <th></th>
           <th>A1</th>
           <th>A2</th>
-          <!--
+          
           <th></th>
           <th>A1A1</th>
           <th>A1A2</th>
           <th>A2A2</th>
-          -->
+          
           <th></th>
           <th>Remover</th>
         </tr>
@@ -26,12 +26,12 @@
           <td></td>
           <td :style="{color: p.colorA1}">{{p.amountA1}}</td>
           <td :style="{color: p.colorA2}">{{p.amountA2}}</td>
-          <!--
+          
           <td></td>
           <td :style="{color: p.colorA1A1}">{{p.amountA1A1}}</td>
           <td :style="{color: p.colorBoth}">{{p.amountBoth}}</td>
           <td :style="{color: p.colorA2A2}">{{p.amountA2A2}}</td>
-          -->
+          
           <td></td>
           <td>
             <button class="waves-effect waves-light btn" @click="onRemove(i)">

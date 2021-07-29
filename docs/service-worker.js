@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/alelotorio/precache-manifest.def0bedd2d3a6453f06951008c892f6a.js"
+  "/alelotorio/precache-manifest.55bda5a173291bd1c79de60c654c5db9.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "alelotorio"});
