@@ -8,7 +8,8 @@
               <p class="center-align title"><b>{{population.name}}</b></p>
               <p class="center-align"><b>Tamanho: </b>{{population.size}}</p>
               <p class="center-align"><b>Repetições: </b>{{repetitions}}</p>
-              <p class="center-align"><b>Máximo de gerações: </b>{{config.maxNumberOfGenerations}}</p>
+              <p class="center-align"><b>Frequência de A1: </b>{{parseFloat(1 - Number(config.a2Frequency)).toFixed(2)}}</p>
+              <p class="center-align"><b>Frequência de A2: </b>{{parseFloat(Number(config.a2Frequency)).toFixed(2)}}</p>
             </div>
           </div>
         </div>
@@ -38,6 +39,17 @@
                 :max="10000"
                 :step="50"
                 v-model="config.maxNumberOfGenerations"/>
+              <p class="center-align">FREQUÊNCIA</p>
+              <div class="alleles-frequency">
+                <p class="center-align">A1</p>
+                  <input
+                  type="range"
+                  :min="0"
+                  :max="1"
+                  :step="0.01"
+                  v-model="config.a2Frequency"/>
+                <p class="center-align">A2</p>
+              </div>
             </div>
           </div>
         </div>
@@ -107,6 +119,7 @@ import { Component, Vue } from 'vue-property-decorator';
       repetitions: 300,
       factor: 50,
       config: {
+        a2Frequency: 0.5,
         maxNumberOfGenerations: 2300,
         maxNumberOfRepetions: 1000,
         minNumberOfRepetions: 100,
@@ -161,8 +174,8 @@ import { Component, Vue } from 'vue-property-decorator';
       const generations: any = {};
 
       for (let i = 0; i < repetitions; i++) {
-        let a1 = population.size;
-        let a2 = population.size;
+        let a2 = Math.floor(population.size * 2 * that.config.a2Frequency);
+        let a1 = (population.size * 2) - a2;
 
         let generation = 2;
         while (generation <= maxNumberOfGenerations && a1 !== total && a2 !== total) {
@@ -262,5 +275,13 @@ export default class Home extends Vue {}
 }
 .tabs .tab a.active {
   font-weight: bolder;
+}
+
+.alleles-frequency{
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>
