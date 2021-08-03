@@ -100,7 +100,7 @@
         <pie-chart
           legend="bottom"
           :data="allelesData"
-          :colors="[config.colors.alleles.a1, config.colors.alleles.both, config.colors.alleles.a2]"
+          :colors="[config.colors.alleles.a2, config.colors.alleles.both, config.colors.alleles.a1]"
           :donut="true" />
       </div>
     </div>
@@ -232,9 +232,9 @@ import { Component, Vue } from 'vue-property-decorator';
       // data bind
       const population: any = that.population;
       return [
-        ['A1', population.alleles.a1],
-        ['Não fixado', population.alleles.a],
         ['A2', population.alleles.a2],
+        ['Não fixado', population.alleles.a],
+        ['A1', population.alleles.a1],
       ];
     },
     generationsData(): any[] {
