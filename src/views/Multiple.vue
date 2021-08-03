@@ -100,7 +100,7 @@
         <pie-chart
           legend="bottom"
           :data="allelesData"
-          :colors="[config.colors.alleles.a2, config.colors.alleles.both, config.colors.alleles.a1]"
+          :colors="[config.colors.alleles.a1, config.colors.alleles.both, config.colors.alleles.a2]"
           :donut="true" />
       </div>
     </div>
